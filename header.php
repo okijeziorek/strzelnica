@@ -12,39 +12,31 @@
 <header class="site-header">
     <div class="utility-bar">
         <div class="utility-left">
-            <a href="tel:<?php echo esc_attr(preg_replace('/[^0-9+]/', '', get_theme_mod('gro_phone', '690 629 112'))); ?>">
-                <span class="utility-icon" aria-hidden="true">☎</span>
-                <?php echo esc_html(get_theme_mod('gro_phone', '690 629 112')); ?>
-            </a>
-            <span><span class="utility-icon" aria-hidden="true">◆</span> <?php echo esc_html(get_theme_mod('gro_top_note', 'Najlepsi instruktorzy i bezpieczne tory')); ?></span>
+            <?php if (gro_dynamic_setting('gro_phone')) : ?>
+                <a href="tel:<?php echo esc_attr(preg_replace('/[^0-9+]/', '', gro_dynamic_setting('gro_phone'))); ?>">
+                    <span class="utility-icon" aria-hidden="true">☎</span>
+                    <?php echo esc_html(gro_dynamic_setting('gro_phone')); ?>
+                </a>
+            <?php endif; ?>
+            <?php if (gro_dynamic_setting('gro_top_note')) : ?><span><?php echo esc_html(gro_dynamic_setting('gro_top_note')); ?></span><?php endif; ?>
         </div>
         <div class="utility-right">
-            <span><?php echo esc_html(get_theme_mod('gro_hours', 'Pn–Pt 10:00–22:00')); ?></span>
-            <span><span class="utility-icon" aria-hidden="true">⌖</span> <?php echo esc_html(get_theme_mod('gro_city', 'Toruń')); ?></span>
+            <?php if (gro_dynamic_setting('gro_hours')) : ?><span><?php echo esc_html(gro_dynamic_setting('gro_hours')); ?></span><?php endif; ?>
         </div>
     </div>
     <div class="main-nav-row">
         <?php if (has_custom_logo()) : ?>
             <div class="brand custom-brand"><?php the_custom_logo(); ?></div>
         <?php else : ?>
-            <a class="brand" href="<?php echo esc_url(home_url('/')); ?>" aria-label="<?php echo esc_attr(get_bloginfo('name')); ?>">
-                <span class="brand-mark" aria-hidden="true">
-                    <svg viewBox="0 0 64 64" focusable="false"><path d="M10 42a24 24 0 1 1 44 0"/><path d="M17 38l-5-2m10-8-4-4m14-3v-6m10 13 4-4m1 14 5-2"/><path class="needle" d="M32 42l13-16"/><circle cx="32" cy="42" r="3"/></svg>
-                </span>
-                <span class="brand-text"><b>Gun</b><strong>Resort</strong></span>
+            <a class="brand" href="<?php echo esc_url(home_url('/')); ?>">
+                <span class="brand-text"><b><?php echo esc_html(get_bloginfo('name')); ?></b></span>
             </a>
         <?php endif; ?>
-        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-menu" aria-label="<?php esc_attr_e('Otwórz menu', 'gun-resort-one'); ?>"><span></span><span></span><span></span></button>
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-menu" aria-label="<?php echo esc_attr(gro_dynamic_setting('gro_open_menu_label')); ?>"><span></span><span></span><span></span></button>
         <nav class="primary-nav" id="primary-menu" aria-label="<?php esc_attr_e('Menu główne', 'gun-resort-one'); ?>">
-            <?php wp_nav_menu([
-                'theme_location' => 'primary',
-                'container'      => false,
-                'menu_class'     => 'nav-list',
-                'fallback_cb'    => 'gro_menu_fallback',
-                'depth'          => 1,
-            ]); ?>
+            <?php wp_nav_menu(['theme_location' => 'primary', 'container' => false, 'menu_class' => 'nav-list', 'fallback_cb' => false, 'depth' => 1]); ?>
         </nav>
-        <a class="button button-small nav-cta js-booking-link" data-service="Strzelnica" href="<?php echo esc_url(gro_section_url('rezerwacja')); ?>"><?php esc_html_e('Zarezerwuj', 'gun-resort-one'); ?></a>
+        <?php if (gro_dynamic_setting('gro_booking_label')) : ?><a class="button button-small nav-cta" href="<?php echo esc_url(home_url('/#rezerwacja')); ?>"><?php echo esc_html(gro_dynamic_setting('gro_booking_label')); ?></a><?php endif; ?>
     </div>
 </header>
 <main id="main">

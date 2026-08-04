@@ -1,52 +1,44 @@
 </main>
 <footer class="site-footer" id="kontakt">
     <div class="footer-grid">
+        <?php if (gro_dynamic_setting('gro_footer_about')) : ?>
         <section>
-            <h3><?php esc_html_e('O nas', 'gun-resort-one'); ?></h3>
-            <p><?php echo esc_html(get_theme_mod('gro_footer_about', 'Profesjonalne tory strzeleckie, doświadczeni instruktorzy i oferta dla gości indywidualnych oraz firm.')); ?></p>
+            <h3><?php echo esc_html(get_bloginfo('name')); ?></h3>
+            <p><?php echo esc_html(gro_dynamic_setting('gro_footer_about')); ?></p>
         </section>
+        <?php endif; ?>
+
         <section>
-            <h3><?php esc_html_e('Legal', 'gun-resort-one'); ?></h3>
             <?php
             $legal_links = [
-                [get_privacy_policy_url(), __('Polityka prywatności', 'gun-resort-one')],
-                [get_theme_mod('gro_terms_url', ''), __('Regulamin', 'gun-resort-one')],
-                [get_theme_mod('gro_cookies_url', ''), __('Pliki cookies', 'gun-resort-one')],
+                [get_privacy_policy_url(), get_the_title((int) get_option('wp_page_for_privacy_policy'))],
+                [gro_dynamic_setting('gro_terms_url'), wp_parse_url(gro_dynamic_setting('gro_terms_url'), PHP_URL_HOST)],
+                [gro_dynamic_setting('gro_cookies_url'), wp_parse_url(gro_dynamic_setting('gro_cookies_url'), PHP_URL_HOST)],
             ];
             foreach ($legal_links as $legal_link) :
-                if ($legal_link[0]) : ?>
+                if ($legal_link[0] && $legal_link[1]) : ?>
                     <a href="<?php echo esc_url($legal_link[0]); ?>"><?php echo esc_html($legal_link[1]); ?></a>
-                <?php else : ?>
-                    <span class="footer-disabled-link"><?php echo esc_html($legal_link[1]); ?></span>
                 <?php endif;
             endforeach; ?>
         </section>
+
         <section>
-            <h3><?php esc_html_e('Szybkie linki', 'gun-resort-one'); ?></h3>
-            <a href="<?php echo esc_url(gro_section_url('oferta')); ?>"><?php esc_html_e('Oferta', 'gun-resort-one'); ?></a>
-            <a href="<?php echo esc_url(gro_section_url('cennik')); ?>"><?php esc_html_e('Cennik', 'gun-resort-one'); ?></a>
-            <a href="<?php echo esc_url(gro_section_url('rezerwacja')); ?>"><?php esc_html_e('Rezerwacja', 'gun-resort-one'); ?></a>
+            <?php wp_nav_menu(['theme_location' => 'footer', 'container' => false, 'fallback_cb' => false, 'depth' => 1]); ?>
         </section>
+
         <section>
-            <h3><?php esc_html_e('Kontakt', 'gun-resort-one'); ?></h3>
-            <p><span aria-hidden="true">⌖</span> <?php echo esc_html(get_theme_mod('gro_address', 'ul. Przykładowa 69, 87-100 Toruń')); ?></p>
-            <a href="tel:<?php echo esc_attr(preg_replace('/[^0-9+]/', '', get_theme_mod('gro_phone', '690 629 112'))); ?>"><span aria-hidden="true">☎</span> <?php echo esc_html(get_theme_mod('gro_phone', '690 629 112')); ?></a>
-            <?php $contact_email = sanitize_email(get_theme_mod('gro_contact_email', get_option('admin_email'))); ?>
-            <?php if (is_email($contact_email)) : ?><a href="mailto:<?php echo esc_attr($contact_email); ?>"><?php echo esc_html(antispambot($contact_email)); ?></a><?php endif; ?>
-            <?php $map_url = get_theme_mod('gro_map_url', ''); ?>
-            <?php if ($map_url) : ?><a class="map-placeholder" href="<?php echo esc_url($map_url); ?>" target="_blank" rel="noopener" aria-label="<?php esc_attr_e('Otwórz lokalizację na mapie', 'gun-resort-one'); ?>"><span><?php esc_html_e('MAPA', 'gun-resort-one'); ?></span><i aria-hidden="true">+</i></a>
-            <?php else : ?><div class="map-placeholder" aria-label="<?php esc_attr_e('Miejsce na odnośnik do mapy', 'gun-resort-one'); ?>"><span><?php esc_html_e('MAPA', 'gun-resort-one'); ?></span><i aria-hidden="true">+</i></div><?php endif; ?>
+            <?php if (gro_dynamic_setting('gro_address')) : ?><p><?php echo esc_html(gro_dynamic_setting('gro_address')); ?></p><?php endif; ?>
+            <?php if (gro_dynamic_setting('gro_phone')) : ?><a href="tel:<?php echo esc_attr(preg_replace('/[^0-9+]/', '', gro_dynamic_setting('gro_phone'))); ?>"><?php echo esc_html(gro_dynamic_setting('gro_phone')); ?></a><?php endif; ?>
+            <?php if (is_email(gro_dynamic_setting('gro_email'))) : ?><a href="mailto:<?php echo esc_attr(gro_dynamic_setting('gro_email')); ?>"><?php echo esc_html(antispambot(gro_dynamic_setting('gro_email'))); ?></a><?php endif; ?>
+            <?php if (gro_dynamic_setting('gro_map_url')) : ?><a class="map-placeholder" href="<?php echo esc_url(gro_dynamic_setting('gro_map_url')); ?>" target="_blank" rel="noopener"><span><?php echo esc_html(wp_parse_url(gro_dynamic_setting('gro_map_url'), PHP_URL_HOST)); ?></span></a><?php endif; ?>
         </section>
     </div>
     <div class="footer-bottom">
         <span>© <?php echo esc_html(wp_date('Y')); ?> <?php echo esc_html(get_bloginfo('name')); ?></span>
-        <div class="footer-badges" aria-label="<?php esc_attr_e('Płatności i media społecznościowe', 'gun-resort-one'); ?>">
-            <b aria-label="Visa">VISA</b><b aria-label="Mastercard">MC</b>
-            <?php $facebook = get_theme_mod('gro_facebook_url', ''); ?>
-            <?php $instagram = get_theme_mod('gro_instagram_url', ''); ?>
-            <?php if ($facebook) : ?><a href="<?php echo esc_url($facebook); ?>" target="_blank" rel="noopener" aria-label="Facebook">f</a><?php else : ?><span aria-hidden="true">f</span><?php endif; ?>
-            <span aria-hidden="true">𝕏</span>
-            <?php if ($instagram) : ?><a href="<?php echo esc_url($instagram); ?>" target="_blank" rel="noopener" aria-label="Instagram">◎</a><?php else : ?><span aria-hidden="true">◎</span><?php endif; ?>
+        <div class="footer-badges">
+            <?php foreach (['gro_facebook_url' => 'Facebook', 'gro_x_url' => 'X', 'gro_instagram_url' => 'Instagram'] as $key => $label) : ?>
+                <?php if (gro_dynamic_setting($key)) : ?><a href="<?php echo esc_url(gro_dynamic_setting($key)); ?>" target="_blank" rel="noopener"><?php echo esc_html($label); ?></a><?php endif; ?>
+            <?php endforeach; ?>
         </div>
     </div>
 </footer>
