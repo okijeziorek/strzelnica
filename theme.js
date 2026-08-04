@@ -1,6 +1,7 @@
 (function () {
     'use strict';
 
+    const labels = window.groTheme || {};
     const toggle = document.querySelector('.menu-toggle');
     const nav = document.querySelector('.primary-nav');
     const body = document.body;
@@ -10,7 +11,9 @@
             return;
         }
         toggle.setAttribute('aria-expanded', 'false');
-        toggle.setAttribute('aria-label', 'Otwórz menu');
+        if (labels.openMenu) {
+            toggle.setAttribute('aria-label', labels.openMenu);
+        }
         nav.classList.remove('is-open');
         body.classList.remove('menu-open');
         if (restoreFocus) {
@@ -22,7 +25,11 @@
         toggle.addEventListener('click', function () {
             const willOpen = toggle.getAttribute('aria-expanded') !== 'true';
             toggle.setAttribute('aria-expanded', String(willOpen));
-            toggle.setAttribute('aria-label', willOpen ? 'Zamknij menu' : 'Otwórz menu');
+            if (willOpen && labels.closeMenu) {
+                toggle.setAttribute('aria-label', labels.closeMenu);
+            } else if (!willOpen && labels.openMenu) {
+                toggle.setAttribute('aria-label', labels.openMenu);
+            }
             nav.classList.toggle('is-open', willOpen);
             body.classList.toggle('menu-open', willOpen);
         });
@@ -38,12 +45,6 @@
                 closeMenu(true);
             }
         });
-
-        document.addEventListener('click', function (event) {
-            if (nav.classList.contains('is-open') && !nav.contains(event.target) && !toggle.contains(event.target)) {
-                closeMenu(false);
-            }
-        });
     }
 
     const serviceSelect = document.getElementById('service');
@@ -53,41 +54,15 @@
                 return;
             }
             const requestedService = link.getAttribute('data-service');
-            const matchingOption = Array.from(serviceSelect.options).find(function (option) {
+            const exists = Array.from(serviceSelect.options).some(function (option) {
                 return option.value === requestedService;
             });
-            if (matchingOption) {
+            if (exists) {
                 serviceSelect.value = requestedService;
                 serviceSelect.dispatchEvent(new Event('change', { bubbles: true }));
             }
         });
     });
-
-    const sections = Array.from(document.querySelectorAll('main section[id], footer[id]'));
-    const navLinks = Array.from(document.querySelectorAll('.nav-list a[href*="#"]'));
-    if ('IntersectionObserver' in window && sections.length && navLinks.length) {
-        const linkMap = new Map();
-        navLinks.forEach(function (link) {
-            const hash = new URL(link.href, window.location.href).hash;
-            if (hash) {
-                linkMap.set(hash.slice(1), link);
-            }
-        });
-
-        const observer = new IntersectionObserver(function (entries) {
-            const visible = entries
-                .filter(function (entry) { return entry.isIntersecting; })
-                .sort(function (a, b) { return b.intersectionRatio - a.intersectionRatio; })[0];
-
-            if (!visible || !linkMap.has(visible.target.id)) {
-                return;
-            }
-            navLinks.forEach(function (link) { link.removeAttribute('aria-current'); });
-            linkMap.get(visible.target.id).setAttribute('aria-current', 'location');
-        }, { rootMargin: '-35% 0px -55% 0px', threshold: [0, 0.15, 0.4] });
-
-        sections.forEach(function (section) { observer.observe(section); });
-    }
 
     const bookingForm = document.querySelector('.booking-form');
     if (bookingForm) {
@@ -95,7 +70,9 @@
             const button = bookingForm.querySelector('.form-submit');
             if (button) {
                 button.disabled = true;
-                button.textContent = 'Wysyłanie…';
+                if (labels.sending) {
+                    button.textContent = labels.sending;
+                }
             }
         });
     }
