@@ -1,0 +1,21 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/theme.json",
+  "version": 2,
+  "settings": {
+    "appearanceTools": true,
+    "layout": {
+      "contentSize": "760px",
+      "wideSize": "1110px"
+    },
+    "color": {
+      "palette": [
+        { "slug": "gun-orange", "name": "Gun Orange", "color": "#e65c0b" },
+        { "slug": "gun-dark", "name": "Gun Dark", "color": "#242525" },
+        { "slug": "gun-light", "name": "Gun Light", "color": "#f4f3f0" }
+      ]
+    },
+    "typography": {
+      "fluid": true
+    }
+  }
+}
