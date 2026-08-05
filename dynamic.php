@@ -93,7 +93,7 @@ function gro_dynamic_feature_icon($index) {
     $icons = [
         '<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 5 53 13v17c0 14-9 24-21 29C20 54 11 44 11 30V13z"/><circle cx="32" cy="29" r="9"/><path d="m27 38-3 10 8-4 8 4-3-10"/></svg>',
         '<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="29" cy="34" r="22"/><circle cx="29" cy="34" r="14"/><circle cx="29" cy="34" r="5"/><path d="m33 30 21-21m-9 1h9v9"/></svg>',
-        '<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M8 19h36l11 8-8 9H27l-8-6H8z"/><path d="M29 36h14l-3 20H27zM15 19v-5h28v5M48 23h8"/><circle cx="18" cy="27" r="2"/></svg>',
+        '<img class="feature-glock-icon" src="' . esc_url(get_template_directory_uri() . '/assets/icon-glock-orange.png') . '" alt="">',
         '<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M20 8h24v14c0 10-5 18-12 18s-12-8-12-18z"/><path d="M20 13H9v7c0 8 5 13 13 13m22-20h11v7c0 8-5 13-13 13M32 40v10m-11 6h22M25 50h14"/></svg>',
     ];
 
