@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 define( 'GRO_THEME_VERSION', '2.1.0' );
-define( 'GRO_BLOCK_MIGRATION_VERSION', 4 );
+define( 'GRO_BLOCK_MIGRATION_VERSION', 5 );
 
 /**
  * Registers theme supports used by the block editor and front end.
@@ -24,7 +24,7 @@ function gro_setup() {
 	add_theme_support( 'align-wide' );
 	add_theme_support( 'wp-block-styles' );
 	add_theme_support( 'editor-styles' );
-	add_editor_style( 'main.css' );
+	add_editor_style( array( 'main.css', 'editor.css' ) );
 
 	add_theme_support(
 		'custom-logo',
@@ -56,6 +56,20 @@ function gro_register_pattern_category() {
 	);
 }
 add_action( 'init', 'gro_register_pattern_category' );
+
+/**
+ * Adds reversible visibility controls to links and buttons in the editor.
+ */
+function gro_register_block_styles() {
+	$hidden_style = array(
+		'name'  => 'gro-hidden',
+		'label' => __( 'Ukryj element', 'gun-resort-one' ),
+	);
+
+	register_block_style( 'core/navigation-link', $hidden_style );
+	register_block_style( 'core/button', $hidden_style );
+}
+add_action( 'init', 'gro_register_block_styles' );
 
 /**
  * Loads the small amount of CSS that complements theme.json.

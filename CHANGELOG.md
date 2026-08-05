@@ -6,6 +6,8 @@
 - Dodano odnośnik Kontakt do nawigacji oraz poprawiono układ mobilny strony.
 - Dodano domyślne logo widoczne także przed konfiguracją Logo witryny.
 - Usunięto ograniczenie 760 px z wnętrza hero i siatki zalet, przywracając proporcje obrazu oraz cztery kolumny na desktopie.
+- Dopasowano górny pasek do pełnej szerokości nagłówka i ustawiono kadr zdjęcia hero na prawą stronę.
+- Dodano styl „Ukryj element” dla linków nawigacji i przycisków.
 - Aktualizacja migracji wykorzystuje istniejące obiekty, zachowuje zmiany wykonane w edytorze i nie tworzy duplikatów.
 - Rezerwacje pozostają poza WordPressem; tymczasowe akcje kontaktowe korzystają z telefonu.
 

@@ -1,0 +1,4 @@
+.editor-styles-wrapper .is-style-gro-hidden {
+    display: revert !important;
+    opacity: 0.4;
+}
