@@ -29,12 +29,13 @@
             <div class="brand custom-brand"><?php the_custom_logo(); ?></div>
         <?php else : ?>
             <a class="brand" href="<?php echo esc_url(home_url('/')); ?>">
-                <span class="brand-text"><b><?php echo esc_html(get_bloginfo('name')); ?></b></span>
+                <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 64 64"><path d="M10 42a24 24 0 1 1 44 0"/><path d="M17 38l-5-2m10-8-4-4m14-3v-6m10 13 4-4m1 14 5-2"/><path class="needle" d="M32 42l13-16"/><circle cx="32" cy="42" r="3"/></svg></span>
+                <span class="brand-text"><b>Gun</b><strong>Resort</strong></span>
             </a>
         <?php endif; ?>
         <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-menu" aria-label="<?php echo esc_attr(gro_dynamic_setting('gro_open_menu_label')); ?>"><span></span><span></span><span></span></button>
         <nav class="primary-nav" id="primary-menu" aria-label="<?php esc_attr_e('Menu główne', 'gun-resort-one'); ?>">
-            <?php wp_nav_menu(['theme_location' => 'primary', 'container' => false, 'menu_class' => 'nav-list', 'fallback_cb' => false, 'depth' => 1]); ?>
+            <?php wp_nav_menu(['theme_location' => 'primary', 'container' => false, 'menu_class' => 'nav-list', 'fallback_cb' => 'gro_primary_menu_fallback', 'depth' => 1]); ?>
         </nav>
         <?php if (gro_dynamic_setting('gro_booking_label')) : ?><a class="button button-small nav-cta" href="<?php echo esc_url(home_url('/#rezerwacja')); ?>"><?php echo esc_html(gro_dynamic_setting('gro_booking_label')); ?></a><?php endif; ?>
     </div>
