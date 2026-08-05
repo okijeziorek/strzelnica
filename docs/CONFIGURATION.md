@@ -18,6 +18,8 @@ Motyw nie stosuje blokad edytora.
 1. Przejdź do `Wygląd → Edytor → Projekt → Wzorce`.
 2. Otwórz część szablonu `Nagłówek`.
 3. Edytuj logo, nazwę, telefon, komunikat, godziny i blok Navigation.
+
+Aby tymczasowo ukryć link nawigacji lub przycisk bez jego usuwania, zaznacz blok i wybierz styl **Ukryj element**. W edytorze element pozostaje półprzezroczysty, a na stronie publicznej jest niewidoczny. Ponowne wybranie stylu domyślnego przywraca element.
 4. Zapisz część szablonu.
 
 Menu mobilne jest obsługiwane przez blok Navigation WordPressa i nie wymaga osobnego skryptu.

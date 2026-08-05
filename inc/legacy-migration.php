@@ -454,6 +454,39 @@ function gro_create_migrated_front_page() {
 }
 
 /**
+ * Removes the obsolete constrained layout from a generated header part.
+ *
+ * @param int $template_part_id Template part post ID.
+ * @return int|WP_Error
+ */
+function gro_normalize_header_template_part( $template_part_id ) {
+	$template_part = get_post( $template_part_id );
+	if ( ! $template_part instanceof WP_Post ) {
+		return new WP_Error( 'gro_missing_header', __( 'Nie znaleziono nagłówka Gun Resort.', 'gun-resort-one' ) );
+	}
+
+	$content = str_replace(
+		'"className":"gro-site-header","layout":{"type":"constrained"}',
+		'"className":"gro-site-header"',
+		(string) $template_part->post_content
+	);
+
+	if ( $content === $template_part->post_content ) {
+		return absint( $template_part_id );
+	}
+
+	return wp_update_post(
+		wp_slash(
+			array(
+				'ID'           => $template_part_id,
+				'post_content' => $content,
+			)
+		),
+		true
+	);
+}
+
+/**
  * Builds navigation-link blocks from the old primary menu or safe defaults.
  *
  * @return string
@@ -657,10 +690,7 @@ function gro_build_header_content( $navigation_id ) {
 
 	return gro_block(
 		'group',
-		array(
-			'className' => 'gro-site-header',
-			'layout'    => array( 'type' => 'constrained' ),
-		),
+		array( 'className' => 'gro-site-header' ),
 		'<div class="wp-block-group gro-site-header">' . $utility . $main . '</div>'
 	);
 }
@@ -724,6 +754,11 @@ function gro_run_block_migration() {
 	$template_part_id = gro_find_migration_post( 'wp_template_part' );
 	if ( ! $template_part_id ) {
 		$template_part_id = gro_create_header_template_part( $navigation_id );
+		if ( is_wp_error( $template_part_id ) ) {
+			return $template_part_id;
+		}
+	} else {
+		$template_part_id = gro_normalize_header_template_part( $template_part_id );
 		if ( is_wp_error( $template_part_id ) ) {
 			return $template_part_id;
 		}
