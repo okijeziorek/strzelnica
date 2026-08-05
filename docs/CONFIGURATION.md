@@ -1,12 +1,18 @@
 # Konfiguracja motywu
 
+## Edycja strony głównej
+
+Panel `Wygląd → Dostosuj → Strona główna — treść` pozwala edytować górny pasek, sekcję główną, zdjęcie, teksty i adresy przycisków oraz włączać menu i przycisk rezerwacji. Nazwę strony i logo ustawia się w `Wygląd → Dostosuj → Tożsamość witryny`.
+
+Cztery kafelki są wpisami w sekcji `Zalety`. Każdy kafelek ma edytowalny tytuł, opis, obrazek wyróżniający i kolejność. Można również dodawać nowe kafelki, usuwać istniejące lub zapisywać je jako szkice, aby ukryć je na stronie.
+
 ## Ustawienia ogólne WordPressa
 
 Nazwa marki pobierana jest z tytułu witryny, a logo z mechanizmu własnego logo WordPressa. Ustaw je w `Ustawienia → Ogólne` oraz `Wygląd → Dostosuj → Tożsamość witryny`.
 
-## Sekcja „Treść strony i komunikaty”
+## Sekcja „Strona główna — treść”
 
-Pola zarejestrowane przez motyw znajdują się w `Wygląd → Dostosuj → Treść strony i komunikaty`.
+Pola zarejestrowane przez motyw znajdują się w `Wygląd → Dostosuj → Strona główna — treść`.
 
 ### Sekcja główna
 

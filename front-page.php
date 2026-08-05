@@ -11,8 +11,8 @@ $features = gro_dynamic_items('gro_feature');
         <?php if (gro_dynamic_setting('gro_hero_title')) : ?><h1><?php echo nl2br(esc_html(gro_dynamic_setting('gro_hero_title'))); ?></h1><?php endif; ?>
         <?php if (gro_dynamic_setting('gro_hero_text')) : ?><p><?php echo esc_html(gro_dynamic_setting('gro_hero_text')); ?></p><?php endif; ?>
         <div class="hero-actions">
-            <?php if (gro_dynamic_setting('gro_offer_label')) : ?><a class="button" href="#pakiety"><?php echo esc_html(gro_dynamic_setting('gro_offer_label')); ?></a><?php endif; ?>
-            <?php if (gro_ui_feature_enabled('booking_cta') && gro_dynamic_setting('gro_booking_label')) : ?><a class="button" href="#rezerwacja"><?php echo esc_html(gro_dynamic_setting('gro_booking_label')); ?></a><?php endif; ?>
+            <?php if (gro_dynamic_setting('gro_offer_label') && gro_dynamic_setting('gro_offer_url')) : ?><a class="button" href="<?php echo esc_url(gro_dynamic_setting('gro_offer_url')); ?>"><?php echo esc_html(gro_dynamic_setting('gro_offer_label')); ?></a><?php endif; ?>
+            <?php if (gro_ui_feature_enabled('booking_cta') && gro_dynamic_setting('gro_booking_label') && gro_dynamic_setting('gro_booking_url')) : ?><a class="button" href="<?php echo esc_url(gro_dynamic_setting('gro_booking_url')); ?>"><?php echo esc_html(gro_dynamic_setting('gro_booking_label')); ?></a><?php endif; ?>
         </div>
     </div>
 </section>

@@ -32,7 +32,7 @@
                 <span class="brand-mark" aria-hidden="true">
                     <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/logo-glock.png'); ?>" alt="">
                 </span>
-                <span class="brand-text"><b>Gun</b><strong>Resort</strong></span>
+                <span class="brand-text"><strong><?php echo esc_html(get_bloginfo('name')); ?></strong></span>
             </a>
         <?php endif; ?>
         <?php if (gro_ui_feature_enabled('primary_navigation')) : ?>
@@ -41,7 +41,7 @@
             <?php wp_nav_menu(['theme_location' => 'primary', 'container' => false, 'menu_class' => 'nav-list', 'fallback_cb' => 'gro_primary_menu_fallback', 'depth' => 1]); ?>
         </nav>
         <?php endif; ?>
-        <?php if (gro_ui_feature_enabled('booking_cta') && gro_dynamic_setting('gro_booking_label')) : ?><a class="button button-small nav-cta" href="<?php echo esc_url(home_url('/#rezerwacja')); ?>"><?php echo esc_html(gro_dynamic_setting('gro_booking_label')); ?></a><?php endif; ?>
+        <?php if (gro_ui_feature_enabled('booking_cta') && gro_dynamic_setting('gro_booking_label') && gro_dynamic_setting('gro_booking_url')) : ?><a class="button button-small nav-cta" href="<?php echo esc_url(gro_dynamic_setting('gro_booking_url')); ?>"><?php echo esc_html(gro_dynamic_setting('gro_booking_label')); ?></a><?php endif; ?>
     </div>
 </header>
 <main id="main">

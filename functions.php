@@ -21,17 +21,17 @@ function gro_setup() {
 }
 add_action('after_setup_theme', 'gro_setup');
 
-/**
- * Tymczasowe przełączniki widoczności elementów interfejsu.
- * Ustaw wartość na true, aby ponownie pokazać wybrany element.
- */
 function gro_ui_feature_enabled($feature) {
-    $features = [
-        'primary_navigation' => false,
-        'booking_cta' => false,
+    $settings = [
+        'primary_navigation' => 'gro_show_primary_navigation',
+        'booking_cta' => 'gro_show_booking_cta',
     ];
 
-    return (bool) ($features[$feature] ?? true);
+    if (!isset($settings[$feature])) {
+        return true;
+    }
+
+    return (bool) get_theme_mod($settings[$feature], false);
 }
 
 function gro_primary_menu_fallback() {
