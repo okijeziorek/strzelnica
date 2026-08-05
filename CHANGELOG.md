@@ -1,17 +1,22 @@
 # Changelog
 
-## Unreleased
+## 2.0.0
 
-- Usunięto wewnętrzny formularz, wysyłkę e-mail i typ treści usług.
-- Rezerwacje przekierowano do konfigurowalnego systemu zewnętrznego.
+- Przebudowano motyw na natywny motyw blokowy WordPressa.
+- Dodano pełną edycję nagłówka, hero, przycisków i kafelków w edytorze blokowym.
+- Dodano wzorce hero oraz czterech kafelków bez blokad edytora.
+- Dodano bezpieczną, idempotentną migrację ustawień, zalet i menu z wersji 1.x.
+- Ukryto historyczne typy treści, zachowując dane do migracji i rollbacku.
+- Pozostawiono rezerwacje wyłącznie jako opcjonalny link do operatora zewnętrznego.
+- Podniesiono wymagania do WordPressa 7.0 i PHP 8.2.
+- Dodano WordPress Coding Standards, walidację CI i budowę instalowalnego ZIP-a.
 
 ## 1.1.0
+
 - Dopracowano wygląd względem dostarczonej makiety.
-- Zastąpiono ikony CSS dokładniejszymi ikonami SVG.
-- Dodano edycję obrazów, treści, cennika, koloru i odnośników w Customizerze.
-- Przebudowano formularz rezerwacji i jego walidację.
-- Dodano preselektor usługi, aktywną sekcję menu i lepszą obsługę urządzeń mobilnych.
-- Dodano theme.json, 404.php i single.php.
+- Dodano edycję treści przez Personalizer i własne typy wpisów.
+- Dodano zewnętrzny odnośnik rezerwacji.
 
 ## 1.0.1
-- Poprawiono odnośniki, menu, dostępność i walidację formularza.
+
+- Poprawiono odnośniki, menu i dostępność.

@@ -1,0 +1,55 @@
+name: Quality
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: PHP, WordPress and JSON
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          coverage: none
+          tools: composer:v2
+
+      - name: Validate Composer metadata
+        run: composer validate --strict --no-check-lock
+
+      - name: Install coding standards
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Check PHP syntax
+        shell: bash
+        run: find . -path ./vendor -prune -o -name '*.php' -print0 | xargs -0 -n1 php -l
+
+      - name: Run WordPress Coding Standards
+        run: composer lint
+
+      - name: Validate JSON files
+        run: |
+          python -m json.tool theme.json >/dev/null
+          python -m json.tool blueprint.json >/dev/null
+          python -m json.tool composer.json >/dev/null
+
+      - name: Build installable theme archive
+        run: git archive --format=zip --prefix=gun-resort-one/ --output=gun-resort-one.zip HEAD
+
+      - name: Upload theme archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: gun-resort-one
+          path: gun-resort-one.zip
+          if-no-files-found: error

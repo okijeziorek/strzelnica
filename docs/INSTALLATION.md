@@ -1,129 +1,54 @@
-# Instalacja i pierwsze uruchomienie
+# Instalacja i uruchomienie
 
-## 1. Wymagania środowiska
+## Wymagania
 
-Minimalne wymagania deklarowane przez motyw:
+- najnowszy stabilny WordPress, bazowo 7.0;
+- PHP 8.2 lub nowszy;
+- MySQL/MariaDB zgodne z używaną wersją WordPressa;
+- uprawnienia administratora.
 
-- WordPress 6.0 lub nowszy;
-- PHP 7.4 lub nowszy;
-- MySQL albo MariaDB zgodna z wymaganiami używanej wersji WordPressa;
-- serwer HTTP Apache lub Nginx;
-- uprawnienia administratora WordPressa.
+## WordPress Playground
 
-Dla wdrożenia publicznego zaleca się HTTPS, kopie zapasowe, środowisko testowe i SMTP z uwierzytelnieniem.
+1. Otwórz link `Uruchom stronę w WordPress Playground` z README.
+2. Blueprint instaluje najnowszy WordPress i PHP 8.3, loguje jako administrator oraz aktywuje motyw z `main`.
+3. Po uruchomieniu otwórz `Strony → Strona główna`, aby edytować bloki.
+4. Nagłówek i menu znajdziesz w `Wygląd → Edytor`.
 
-## 2. Instalacja z katalogu
+Do testowania niezmergowanej gałęzi zmień `ref` w kopii `blueprint.json` na nazwę tej gałęzi i udostępnij surowy plik przez GitHub.
 
-1. Pobierz repozytorium.
-2. Zmień nazwę katalogu na czytelną, przykładowo `gun-resort-one`.
-3. Skopiuj katalog do:
+## Instalacja ZIP
 
-```text
-wp-content/themes/gun-resort-one
+1. Pobierz artefakt `gun-resort-one` z udanego workflow GitHub Actions albo zbuduj archiwum poleceniem:
+
+```bash
+git archive --format=zip --prefix=gun-resort-one/ --output=gun-resort-one.zip HEAD
 ```
 
-4. Zaloguj się do panelu WordPressa.
-5. Wejdź w `Wygląd → Motywy`.
-6. Aktywuj **Gun Resort One**.
+2. W WordPressie przejdź do `Wygląd → Motywy → Dodaj nowy → Wyślij motyw`.
+3. Wskaż `gun-resort-one.zip`, zainstaluj i aktywuj.
+4. Odśwież panel. Po migracji pojawi się komunikat z linkiem do strony głównej.
 
-## 3. Instalacja z archiwum ZIP
+## Instalacja z repozytorium
 
-Archiwum musi zawierać katalog motywu, a w nim bezpośrednio plik `style.css`.
-
-Poprawna struktura:
-
-```text
-gun-resort-one.zip
-└── gun-resort-one/
-    ├── style.css
-    ├── functions.php
-    ├── front-page.php
-    └── ...
+```bash
+git clone https://github.com/okijeziorek/strzelnica.git gun-resort-one
 ```
 
-Następnie:
+Umieść katalog w `wp-content/themes/` i aktywuj motyw.
 
-1. przejdź do `Wygląd → Motywy → Dodaj nowy`;
-2. wybierz `Wyślij motyw na serwer`;
-3. wskaż archiwum ZIP;
-4. zainstaluj i aktywuj motyw.
+## Kontrola po instalacji
 
-## 4. Ustawienia witryny
+- otwórz stronę główną bez logowania;
+- sprawdź menu na komputerze i telefonie;
+- przesuń jeden kafelek, zapisz i odśwież stronę;
+- sprawdź przycisk zewnętrznej rezerwacji, jeśli został dodany;
+- sprawdź zwykłą stronę, wpis i 404;
+- sprawdź brak błędów PHP i konsoli przeglądarki.
 
-W `Ustawienia → Ogólne` ustaw:
+## Rollback z 2.0
 
-- tytuł witryny;
-- opis witryny;
-- adres WordPressa i witryny;
-- strefę czasową;
-- format daty i godziny;
-- język witryny;
-- administracyjny adres e-mail.
+1. Wykonaj kopię bazy i plików.
+2. Wgraj poprzednie wydanie motywu.
+3. Odczytaj `gro_block_migration_backup` i przywróć zapisane wartości strony startowej albo wybierz starą stronę w `Ustawienia → Czytanie`.
 
-## 5. Strona główna
-
-Motyw posiada `front-page.php`. W typowej instalacji WordPress użyje go jako widoku strony głównej.
-
-Po aktywacji sprawdź `Ustawienia → Czytanie`. Jeżeli używana jest statyczna strona główna, wybierz właściwą stronę. Motyw nie wymaga jednak wpisywania treści biznesowych w edytorze tej strony — sekcje pobierane są z Personalizatora i własnych typów wpisów.
-
-## 6. Menu
-
-1. Przejdź do `Wygląd → Menu`.
-2. Utwórz nowe menu.
-3. Dodaj własne odnośniki do sekcji, przykładowo:
-
-```text
-/#oferta
-/#pakiety
-/#cennik
-/#kontakt
-```
-
-4. Przypisz menu do lokalizacji `Menu główne`.
-5. Opcjonalnie utwórz osobne menu dla lokalizacji `Menu w stopce`.
-
-## 7. Uzupełnienie treści
-
-Po aktywacji w panelu powinny pojawić się pozycje:
-
-- Zalety;
-- Karty oferty;
-- Usługi;
-- Cennik.
-
-Dodaj i opublikuj co najmniej:
-
-- jedną pozycję cennika;
-- jedną zaletę;
-- jedną kartę oferty.
-
-Kolejność elementów zależy od pola kolejności wpisu, a następnie od daty publikacji.
-
-## 8. Personalizator
-
-Przejdź do `Wygląd → Dostosuj → Treść strony i komunikaty` i uzupełnij wszystkie używane pola. Puste pola mogą powodować brak etykiet albo brak danych kontaktowych na stronie.
-
-Szczegóły pól opisano w `CONFIGURATION.md`.
-
-## 9. Rezerwacje zewnętrzne
-
-W `Wygląd → Dostosuj → Strona główna — treść` ustaw etykietę przycisku i pełny adres HTTPS systemu rezerwacyjnego. Motyw nie wysyła ani nie przechowuje danych rezerwacji.
-
-## 10. Kontrola po instalacji
-
-Sprawdź:
-
-- stronę główną na komputerze i telefonie;
-- otwieranie i zamykanie menu mobilnego;
-- wszystkie odnośniki;
-- odnośnik do zewnętrznego systemu rezerwacji;
-- stronę 404;
-- pojedynczy wpis i zwykłą stronę;
-- logo, faviconę i tytuł karty;
-- politykę prywatności oraz pozostałe dokumenty prawne.
-
-## 11. Aktualizacja motywu
-
-Przed aktualizacją wykonaj kopię plików i bazy danych. Treści zapisane jako wpisy oraz ustawienia Personalizatora znajdują się w bazie, ale ręczne zmiany w plikach motywu zostaną nadpisane przy zastąpieniu katalogu.
-
-Zmiany niestandardowe należy w przyszłości przenosić do motywu potomnego albo rozwijać w repozytorium, a nie edytować bezpośrednio w panelowym edytorze plików.
+Migrator nie usuwa starych stron, wpisów ani ustawień Customizera.

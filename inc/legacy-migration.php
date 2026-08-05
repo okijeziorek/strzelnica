@@ -1,0 +1,766 @@
+<?php
+/**
+ * One-time migration from the 1.x Customizer/CPT model to editable blocks.
+ *
+ * Legacy values are deliberately left in the database for rollback. The
+ * migration creates a new front page and only switches WordPress to it after
+ * every required object has been created successfully.
+ *
+ * @package GunResortOne
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/**
+ * Keeps old content queryable for migration and rollback without exposing its UI.
+ */
+function gro_register_legacy_post_types() {
+	foreach ( array( 'gro_feature', 'gro_card', 'gro_price' ) as $post_type ) {
+		register_post_type(
+			$post_type,
+			array(
+				'public'       => false,
+				'show_ui'      => false,
+				'show_in_menu' => false,
+				'supports'     => array( 'title', 'editor', 'excerpt', 'thumbnail', 'page-attributes' ),
+			)
+		);
+	}
+}
+add_action( 'init', 'gro_register_legacy_post_types', 5 );
+
+/**
+ * Returns the values used by a fresh install and as fallbacks during migration.
+ *
+ * @return array<string, mixed>
+ */
+function gro_legacy_defaults() {
+	return array(
+		'gro_hero_title'       => "Poczuj emocje.\nOpanuj celność.\nGun Resort.",
+		'gro_hero_text'        => 'Opanuj emocje i celność w bezpiecznych warunkach pod okiem doświadczonych instruktorów.',
+		'gro_offer_label'      => 'Zobacz ofertę',
+		'gro_offer_url'        => '#pakiety',
+		'gro_booking_label'    => 'Rezerwuj online',
+		'gro_booking_url'      => '',
+		'gro_features_label'   => 'Dlaczego Gun Resort',
+		'gro_phone'            => '690 629 112',
+		'gro_hours'            => 'Pn–Pt 10:00–22:00',
+		'gro_top_note'         => 'Najlepsi instruktorzy i bezpieczne tory',
+		'gro_hero_image'       => 0,
+		'gro_show_booking_cta' => false,
+	);
+}
+
+/**
+ * Reads one legacy theme modification.
+ *
+ * @param string $key Theme modification key.
+ * @return mixed
+ */
+function gro_legacy_mod( $key ) {
+	$defaults = gro_legacy_defaults();
+	$value    = get_theme_mod( $key, $defaults[ $key ] ?? '' );
+
+	return is_string( $value ) ? trim( $value ) : $value;
+}
+
+/**
+ * Creates a normal, paired block from already escaped inner markup.
+ *
+ * @param string               $name  Block name without the core/ prefix.
+ * @param array<string, mixed> $attrs Block attributes.
+ * @param string               $html  Saved block markup.
+ * @return string
+ */
+function gro_block( $name, $attrs, $html ) {
+	$attributes = empty( $attrs ) ? '' : ' ' . wp_json_encode( $attrs, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
+
+	return "<!-- wp:{$name}{$attributes} -->\n{$html}\n<!-- /wp:{$name} -->\n";
+}
+
+/**
+ * Creates a self-closing block comment.
+ *
+ * @param string               $name  Block name without the core/ prefix.
+ * @param array<string, mixed> $attrs Block attributes.
+ * @return string
+ */
+function gro_void_block( $name, $attrs = array() ) {
+	$attributes = empty( $attrs ) ? '' : ' ' . wp_json_encode( $attrs, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
+
+	return "<!-- wp:{$name}{$attributes} /-->\n";
+}
+
+/**
+ * Builds a paragraph block.
+ *
+ * @param string               $text  Text or safe inline HTML.
+ * @param array<string, mixed> $attrs Block attributes.
+ * @return string
+ */
+function gro_paragraph_block( $text, $attrs = array() ) {
+	$class = empty( $attrs['className'] ) ? '' : ' ' . sanitize_html_class( $attrs['className'] );
+
+	return gro_block( 'paragraph', $attrs, '<p class="' . trim( 'wp-block-paragraph' . $class ) . '">' . wp_kses_post( $text ) . '</p>' );
+}
+
+/**
+ * Builds a heading block.
+ *
+ * @param string               $text  Heading text or safe line breaks.
+ * @param int                  $level Heading level.
+ * @param array<string, mixed> $attrs Additional attributes.
+ * @return string
+ */
+function gro_heading_block( $text, $level, $attrs = array() ) {
+	if ( 2 !== $level ) {
+		$attrs['level'] = $level;
+	}
+
+	$class = empty( $attrs['className'] ) ? '' : ' ' . sanitize_html_class( $attrs['className'] );
+	$tag   = 'h' . absint( $level );
+
+	return gro_block( 'heading', $attrs, '<' . $tag . ' class="' . trim( 'wp-block-heading' . $class ) . '">' . wp_kses_post( $text ) . '</' . $tag . '>' );
+}
+
+/**
+ * Builds an editable button block when both label and URL are present.
+ *
+ * @param string $label Button label.
+ * @param string $url   Button URL.
+ * @param string $class_name Optional block class.
+ * @return string
+ */
+function gro_button_block( $label, $url, $class_name = '' ) {
+	if ( '' === trim( $label ) || '' === trim( $url ) ) {
+		return '';
+	}
+
+	$attrs       = array();
+	$block_class = 'wp-block-button';
+	if ( '' !== $class_name ) {
+		$attrs['className'] = $class_name;
+		$block_class       .= ' ' . sanitize_html_class( $class_name );
+	}
+
+	$html = '<div class="' . esc_attr( $block_class ) . '"><a class="wp-block-button__link wp-element-button" href="' . esc_url( $url ) . '">' . esc_html( $label ) . '</a></div>';
+
+	return gro_block( 'button', $attrs, $html );
+}
+
+/**
+ * Builds an editable image block.
+ *
+ * @param string $url       Image URL.
+ * @param int    $id        Attachment ID, when available.
+ * @param string $alt       Alternative text.
+ * @param string $class_name Block class.
+ * @return string
+ */
+function gro_image_block( $url, $id = 0, $alt = '', $class_name = '' ) {
+	if ( '' === $url ) {
+		return '';
+	}
+
+	$attrs = array(
+		'sizeSlug'        => 'full',
+		'linkDestination' => 'none',
+	);
+	if ( $id ) {
+		$attrs['id'] = absint( $id );
+	}
+	if ( '' !== $class_name ) {
+		$attrs['className'] = $class_name;
+	}
+
+	$figure_classes = array( 'wp-block-image', 'size-full' );
+	if ( '' !== $class_name ) {
+		$figure_classes[] = sanitize_html_class( $class_name );
+	}
+	$image_class = $id ? ' class="wp-image-' . absint( $id ) . '"' : '';
+	$html        = '<figure class="' . esc_attr( implode( ' ', $figure_classes ) ) . '"><img src="' . esc_url( $url ) . '" alt="' . esc_attr( $alt ) . '"' . $image_class . '/></figure>';
+
+	return gro_block( 'image', $attrs, $html );
+}
+
+/**
+ * Collects legacy features, or starter content on a fresh installation.
+ *
+ * @return array<int, array<string, mixed>>
+ */
+function gro_collect_legacy_features() {
+	$posts = get_posts(
+		array(
+			'post_type'      => 'gro_feature',
+			'post_status'    => 'publish',
+			'posts_per_page' => -1,
+			'orderby'        => array(
+				'menu_order' => 'ASC',
+				'date'       => 'ASC',
+			),
+		)
+	);
+
+	$features = array();
+	foreach ( $posts as $post ) {
+		$thumbnail_id = get_post_thumbnail_id( $post );
+		$features[]   = array(
+			'title'     => get_the_title( $post ),
+			'text'      => wp_strip_all_tags( $post->post_content ),
+			'image_id'  => $thumbnail_id,
+			'image_url' => $thumbnail_id ? (string) wp_get_attachment_image_url( $thumbnail_id, 'full' ) : '',
+			'image_alt' => $thumbnail_id ? (string) get_post_meta( $thumbnail_id, '_wp_attachment_image_alt', true ) : '',
+		);
+	}
+
+	if ( $features ) {
+		return $features;
+	}
+
+	return array(
+		array(
+			'title' => 'Opieka instruktorów',
+			'text'  => 'Doświadczeni instruktorzy zadbają o Twoje bezpieczeństwo.',
+		),
+		array(
+			'title' => 'Nowoczesne tory',
+			'text'  => 'Pełne wyposażenie i indywidualne stanowiska.',
+		),
+		array(
+			'title' => 'Szeroki arsenał',
+			'text'  => 'Broń krótka i długa — od klasyki po nowoczesność.',
+		),
+		array(
+			'title' => 'Vouchery i imprezy',
+			'text'  => 'Wieczory kawalerskie, eventy i prezenty.',
+		),
+	);
+}
+
+/**
+ * Returns one of the four editable fallback icons.
+ *
+ * @param int $index Feature index.
+ * @return string
+ */
+function gro_feature_icon_url( $index ) {
+	$icons = array(
+		'assets/icon-shield.svg',
+		'assets/icon-target.svg',
+		'assets/icon-glock-orange.png',
+		'assets/icon-trophy.svg',
+	);
+
+	return get_theme_file_uri( $icons[ $index % count( $icons ) ] );
+}
+
+/**
+ * Builds the editable hero pattern.
+ *
+ * @param array<string, mixed> $data Legacy hero values.
+ * @return string
+ */
+function gro_build_hero_blocks( $data ) {
+	$title = nl2br( esc_html( (string) $data['title'] ) );
+	$left  = gro_heading_block( $title, 1, array( 'className' => 'gro-hero__title' ) );
+	$left .= gro_paragraph_block( esc_html( (string) $data['text'] ), array( 'className' => 'gro-hero__lead' ) );
+
+	$buttons  = gro_button_block( (string) $data['offer_label'], (string) $data['offer_url'] );
+	$buttons .= gro_button_block( (string) $data['booking_label'], (string) $data['booking_url'], 'is-style-outline' );
+	if ( '' !== $buttons ) {
+		$left .= gro_block( 'buttons', array( 'className' => 'gro-hero__actions' ), '<div class="wp-block-buttons gro-hero__actions">' . $buttons . '</div>' );
+	}
+
+	$left = gro_block( 'column', array( 'className' => 'gro-hero__copy' ), '<div class="wp-block-column gro-hero__copy">' . $left . '</div>' );
+
+	$image = gro_image_block(
+		(string) $data['image_url'],
+		absint( $data['image_id'] ),
+		(string) $data['image_alt'],
+		'gro-hero__image'
+	);
+	$right = gro_block( 'column', array( 'className' => 'gro-hero__visual' ), '<div class="wp-block-column gro-hero__visual">' . $image . '</div>' );
+
+	$columns = gro_block(
+		'columns',
+		array( 'className' => 'gro-hero__columns' ),
+		'<div class="wp-block-columns gro-hero__columns">' . $left . $right . '</div>'
+	);
+
+	return gro_block(
+		'group',
+		array(
+			'tagName'   => 'section',
+			'anchor'    => 'oferta',
+			'className' => 'gro-hero',
+			'layout'    => array( 'type' => 'constrained' ),
+		),
+		'<section id="oferta" class="wp-block-group gro-hero">' . $columns . '</section>'
+	);
+}
+
+/**
+ * Builds the editable feature-card pattern.
+ *
+ * @param array<int, array<string, mixed>> $features Feature values.
+ * @param string                           $label    Section label.
+ * @return string
+ */
+function gro_build_features_blocks( $features, $label ) {
+	$columns = '';
+	foreach ( $features as $index => $feature ) {
+		$image_url = empty( $feature['image_url'] ) ? gro_feature_icon_url( $index ) : (string) $feature['image_url'];
+		$image_id  = empty( $feature['image_id'] ) ? 0 : absint( $feature['image_id'] );
+		$image_alt = empty( $feature['image_alt'] ) ? '' : (string) $feature['image_alt'];
+
+		$card     = gro_image_block( $image_url, $image_id, $image_alt, 'gro-feature-card__icon' );
+		$card    .= gro_heading_block( esc_html( (string) $feature['title'] ), 3 );
+		$card    .= gro_paragraph_block( esc_html( (string) $feature['text'] ) );
+		$card     = gro_block(
+			'group',
+			array(
+				'className' => 'gro-feature-card',
+				'layout'    => array( 'type' => 'constrained' ),
+			),
+			'<div class="wp-block-group gro-feature-card">' . $card . '</div>'
+		);
+		$columns .= gro_block( 'column', array(), '<div class="wp-block-column">' . $card . '</div>' );
+	}
+
+	$heading = gro_heading_block( esc_html( $label ), 2, array( 'className' => 'screen-reader-text' ) );
+	$grid    = gro_block( 'columns', array( 'className' => 'gro-feature-grid' ), '<div class="wp-block-columns gro-feature-grid">' . $columns . '</div>' );
+
+	return gro_block(
+		'group',
+		array(
+			'tagName'   => 'section',
+			'anchor'    => 'pakiety',
+			'className' => 'gro-features',
+			'layout'    => array( 'type' => 'constrained' ),
+		),
+		'<section id="pakiety" class="wp-block-group gro-features">' . $heading . $grid . '</section>'
+	);
+}
+
+/**
+ * Collects the old home-page data and returns serialized block content.
+ *
+ * @return string
+ */
+function gro_build_migrated_front_page() {
+	$hero_image_id  = absint( gro_legacy_mod( 'gro_hero_image' ) );
+	$hero_image_url = $hero_image_id ? (string) wp_get_attachment_image_url( $hero_image_id, 'full' ) : get_theme_file_uri( 'hero.jpg' );
+	$hero_image_alt = $hero_image_id ? (string) get_post_meta( $hero_image_id, '_wp_attachment_image_alt', true ) : '';
+
+	$hero = array(
+		'title'         => (string) gro_legacy_mod( 'gro_hero_title' ),
+		'text'          => (string) gro_legacy_mod( 'gro_hero_text' ),
+		'offer_label'   => (string) gro_legacy_mod( 'gro_offer_label' ),
+		'offer_url'     => (string) gro_legacy_mod( 'gro_offer_url' ),
+		'booking_label' => '',
+		'booking_url'   => '',
+		'image_id'      => $hero_image_id,
+		'image_url'     => $hero_image_url,
+		'image_alt'     => $hero_image_alt,
+	);
+
+	if ( gro_legacy_mod( 'gro_show_booking_cta' ) && gro_legacy_mod( 'gro_booking_url' ) ) {
+		$hero['booking_label'] = (string) gro_legacy_mod( 'gro_booking_label' );
+		$hero['booking_url']   = (string) gro_legacy_mod( 'gro_booking_url' );
+	}
+
+	return gro_build_hero_blocks( $hero ) . gro_build_features_blocks( gro_collect_legacy_features(), (string) gro_legacy_mod( 'gro_features_label' ) );
+}
+
+/**
+ * Finds an object created by a previous, interrupted migration attempt.
+ *
+ * @param string $post_type Post type.
+ * @return int
+ */
+function gro_find_migration_post( $post_type ) {
+	$posts = get_posts(
+		array(
+			'post_type'      => $post_type,
+			'post_status'    => 'any',
+			'posts_per_page' => 1,
+			'fields'         => 'ids',
+			'meta_key'       => '_gro_block_migration_version',
+			'meta_value'     => GRO_BLOCK_MIGRATION_VERSION,
+		)
+	);
+
+	return $posts ? absint( $posts[0] ) : 0;
+}
+
+/**
+ * Creates the new front page as a draft.
+ *
+ * @return int|WP_Error
+ */
+function gro_create_migrated_front_page() {
+	$page_id = gro_find_migration_post( 'page' );
+	$data    = array(
+		'post_type'    => 'page',
+		'post_status'  => 'draft',
+		'post_title'   => __( 'Strona główna', 'gun-resort-one' ),
+		'post_name'    => 'strona-glowna-blokowa',
+		'post_content' => gro_build_migrated_front_page(),
+	);
+
+	if ( $page_id ) {
+		$data['ID'] = $page_id;
+		$result     = wp_update_post( wp_slash( $data ), true );
+	} else {
+		$result = wp_insert_post( wp_slash( $data ), true );
+	}
+
+	if ( ! is_wp_error( $result ) ) {
+		update_post_meta( $result, '_gro_block_migration_version', GRO_BLOCK_MIGRATION_VERSION );
+	}
+
+	return $result;
+}
+
+/**
+ * Builds navigation-link blocks from the old primary menu or safe defaults.
+ *
+ * @return string
+ */
+function gro_build_navigation_links() {
+	$links     = array();
+	$locations = get_nav_menu_locations();
+
+	if ( ! empty( $locations['primary'] ) ) {
+		$items = wp_get_nav_menu_items( absint( $locations['primary'] ) );
+		foreach ( (array) $items as $item ) {
+			if ( 0 !== absint( $item->menu_item_parent ) ) {
+				continue;
+			}
+			$links[] = array(
+				'label'  => wp_strip_all_tags( $item->title ),
+				'url'    => $item->url,
+				'target' => '_blank' === $item->target ? '_blank' : '',
+			);
+		}
+	}
+
+	if ( ! $links ) {
+		$links = array(
+			array(
+				'label' => __( 'Start', 'gun-resort-one' ),
+				'url'   => home_url( '/' ),
+			),
+			array(
+				'label' => __( 'Oferta', 'gun-resort-one' ),
+				'url'   => home_url( '/#oferta' ),
+			),
+			array(
+				'label' => __( 'Pakiety', 'gun-resort-one' ),
+				'url'   => home_url( '/#pakiety' ),
+			),
+		);
+	}
+
+	$content = '';
+	foreach ( $links as $link ) {
+		$attrs = array(
+			'label'          => $link['label'],
+			'url'            => $link['url'],
+			'kind'           => 'custom',
+			'isTopLevelLink' => true,
+		);
+		if ( ! empty( $link['target'] ) ) {
+			$attrs['opensInNewTab'] = true;
+		}
+		$content .= gro_void_block( 'navigation-link', $attrs );
+	}
+
+	return $content;
+}
+
+/**
+ * Creates an editable Navigation entity.
+ *
+ * @return int|WP_Error
+ */
+function gro_create_navigation() {
+	$navigation_id = gro_find_migration_post( 'wp_navigation' );
+	$data          = array(
+		'post_type'    => 'wp_navigation',
+		'post_status'  => 'publish',
+		'post_title'   => __( 'Menu główne', 'gun-resort-one' ),
+		'post_content' => gro_build_navigation_links(),
+	);
+
+	if ( $navigation_id ) {
+		$data['ID'] = $navigation_id;
+		$result     = wp_update_post( wp_slash( $data ), true );
+	} else {
+		$result = wp_insert_post( wp_slash( $data ), true );
+	}
+
+	if ( ! is_wp_error( $result ) ) {
+		update_post_meta( $result, '_gro_block_migration_version', GRO_BLOCK_MIGRATION_VERSION );
+	}
+
+	return $result;
+}
+
+/**
+ * Builds an editable header using the migrated menu and utility information.
+ *
+ * @param int $navigation_id Navigation post ID.
+ * @return string
+ */
+function gro_build_header_content( $navigation_id ) {
+	$phone     = (string) gro_legacy_mod( 'gro_phone' );
+	$note      = (string) gro_legacy_mod( 'gro_top_note' );
+	$hours     = (string) gro_legacy_mod( 'gro_hours' );
+	$utility   = '';
+	$left      = '';
+	$telephone = preg_replace( '/[^0-9+]/', '', $phone );
+
+	if ( $phone ) {
+		$left .= gro_paragraph_block( '<a href="tel:' . esc_attr( $telephone ) . '">' . esc_html( $phone ) . '</a>' );
+	}
+	if ( $note ) {
+		$left .= gro_paragraph_block( esc_html( $note ) );
+	}
+	if ( $left ) {
+		$left = gro_block(
+			'group',
+			array(
+				'className' => 'gro-utility__left',
+				'layout'    => array(
+					'type'     => 'flex',
+					'flexWrap' => 'wrap',
+				),
+			),
+			'<div class="wp-block-group gro-utility__left">' . $left . '</div>'
+		);
+	}
+	if ( $hours ) {
+		$right = gro_paragraph_block( esc_html( $hours ) );
+		$right = gro_block(
+			'group',
+			array(
+				'className' => 'gro-utility__right',
+				'layout'    => array(
+					'type'           => 'flex',
+					'justifyContent' => 'right',
+				),
+			),
+			'<div class="wp-block-group gro-utility__right">' . $right . '</div>'
+		);
+	} else {
+		$right = '';
+	}
+	if ( $left || $right ) {
+		$utility = gro_block(
+			'group',
+			array(
+				'className' => 'gro-utility',
+				'layout'    => array(
+					'type'           => 'flex',
+					'flexWrap'       => 'nowrap',
+					'justifyContent' => 'space-between',
+				),
+			),
+			'<div class="wp-block-group gro-utility">' . $left . $right . '</div>'
+		);
+	}
+
+	if ( has_custom_logo() ) {
+		$brand = gro_void_block(
+			'site-logo',
+			array(
+				'width'          => 210,
+				'shouldSyncIcon' => true,
+			)
+		);
+	} else {
+		$brand = gro_image_block( get_theme_file_uri( 'assets/logo-glock.png' ), 0, '', 'gro-brand__fallback-logo' );
+	}
+	$brand .= gro_void_block( 'site-title', array( 'level' => 0 ) );
+	$brand  = gro_block(
+		'group',
+		array(
+			'className' => 'gro-brand',
+			'layout'    => array(
+				'type'     => 'flex',
+				'flexWrap' => 'nowrap',
+			),
+		),
+		'<div class="wp-block-group gro-brand">' . $brand . '</div>'
+	);
+
+	$navigation = gro_void_block(
+		'navigation',
+		array(
+			'ref'         => absint( $navigation_id ),
+			'overlayMenu' => 'mobile',
+			'className'   => 'gro-primary-navigation',
+		)
+	);
+	$cta        = '';
+	if ( gro_legacy_mod( 'gro_show_booking_cta' ) && gro_legacy_mod( 'gro_booking_url' ) ) {
+		$cta = gro_block( 'buttons', array( 'className' => 'gro-header-cta' ), '<div class="wp-block-buttons gro-header-cta">' . gro_button_block( (string) gro_legacy_mod( 'gro_booking_label' ), (string) gro_legacy_mod( 'gro_booking_url' ) ) . '</div>' );
+	}
+
+	$main = gro_block(
+		'group',
+		array(
+			'className' => 'gro-main-nav',
+			'layout'    => array(
+				'type'     => 'flex',
+				'flexWrap' => 'nowrap',
+			),
+		),
+		'<div class="wp-block-group gro-main-nav">' . $brand . $navigation . $cta . '</div>'
+	);
+
+	return gro_block(
+		'group',
+		array(
+			'className' => 'gro-site-header',
+			'layout'    => array( 'type' => 'constrained' ),
+		),
+		'<div class="wp-block-group gro-site-header">' . $utility . $main . '</div>'
+	);
+}
+
+/**
+ * Creates the database override for the editable header template part.
+ *
+ * @param int $navigation_id Navigation post ID.
+ * @return int|WP_Error
+ */
+function gro_create_header_template_part( $navigation_id ) {
+	$template_id = gro_find_migration_post( 'wp_template_part' );
+	$data        = array(
+		'post_type'    => 'wp_template_part',
+		'post_status'  => 'publish',
+		'post_title'   => __( 'Nagłówek', 'gun-resort-one' ),
+		'post_name'    => 'header',
+		'post_content' => gro_build_header_content( $navigation_id ),
+	);
+
+	if ( $template_id ) {
+		$data['ID'] = $template_id;
+		$result     = wp_update_post( wp_slash( $data ), true );
+	} else {
+		$result = wp_insert_post( wp_slash( $data ), true );
+	}
+
+	if ( is_wp_error( $result ) ) {
+		return $result;
+	}
+
+	$theme_term = wp_set_object_terms( $result, get_stylesheet(), 'wp_theme' );
+	if ( is_wp_error( $theme_term ) ) {
+		return $theme_term;
+	}
+	wp_set_object_terms( $result, 'header', 'wp_template_part_area' );
+	update_post_meta( $result, '_gro_block_migration_version', GRO_BLOCK_MIGRATION_VERSION );
+
+	return $result;
+}
+
+/**
+ * Executes the migration and switches the static front page last.
+ *
+ * @return int|WP_Error New front-page ID or an error.
+ */
+function gro_run_block_migration() {
+	$page_id = gro_create_migrated_front_page();
+	if ( is_wp_error( $page_id ) ) {
+		return $page_id;
+	}
+
+	$navigation_id = gro_create_navigation();
+	if ( is_wp_error( $navigation_id ) ) {
+		return $navigation_id;
+	}
+
+	$template_part_id = gro_create_header_template_part( $navigation_id );
+	if ( is_wp_error( $template_part_id ) ) {
+		return $template_part_id;
+	}
+
+	$published = wp_update_post(
+		array(
+			'ID'          => $page_id,
+			'post_status' => 'publish',
+		),
+		true
+	);
+	if ( is_wp_error( $published ) ) {
+		return $published;
+	}
+
+	update_option(
+		'gro_block_migration_backup',
+		array(
+			'show_on_front' => get_option( 'show_on_front' ),
+			'page_on_front' => absint( get_option( 'page_on_front' ) ),
+			'migrated_at'   => current_time( 'mysql', true ),
+		),
+		false
+	);
+	update_option( 'show_on_front', 'page' );
+	update_option( 'page_on_front', absint( $page_id ) );
+	update_option( 'gro_block_migration_version', GRO_BLOCK_MIGRATION_VERSION, false );
+
+	return absint( $page_id );
+}
+
+/**
+ * Runs the migration once for administrators after an upgrade or activation.
+ */
+function gro_maybe_migrate_to_blocks() {
+	if ( ! current_user_can( 'edit_theme_options' ) ) {
+		return;
+	}
+
+	if ( absint( get_option( 'gro_block_migration_version', 0 ) ) >= GRO_BLOCK_MIGRATION_VERSION ) {
+		return;
+	}
+
+	$result = gro_run_block_migration();
+	if ( is_wp_error( $result ) ) {
+		set_transient( 'gro_block_migration_error', $result->get_error_message(), 5 * MINUTE_IN_SECONDS );
+		return;
+	}
+
+	set_transient( 'gro_block_migration_notice', absint( $result ), 5 * MINUTE_IN_SECONDS );
+}
+add_action( 'init', 'gro_maybe_migrate_to_blocks', 100 );
+
+/**
+ * Shows the migration result once, with a direct link to the block editor.
+ */
+function gro_block_migration_notice() {
+	if ( ! current_user_can( 'edit_theme_options' ) ) {
+		return;
+	}
+
+	$error = get_transient( 'gro_block_migration_error' );
+	if ( $error ) {
+		delete_transient( 'gro_block_migration_error' );
+		echo '<div class="notice notice-error"><p><strong>' . esc_html__( 'Migracja Gun Resort nie została ukończona.', 'gun-resort-one' ) . '</strong> ' . esc_html( $error ) . '</p></div>';
+		return;
+	}
+
+	$page_id = absint( get_transient( 'gro_block_migration_notice' ) );
+	if ( ! $page_id ) {
+		return;
+	}
+
+	delete_transient( 'gro_block_migration_notice' );
+	$url = admin_url( 'post.php?post=' . $page_id . '&action=edit' );
+	echo '<div class="notice notice-success is-dismissible"><p><strong>' . esc_html__( 'Strona Gun Resort została przeniesiona do bloków.', 'gun-resort-one' ) . '</strong> <a href="' . esc_url( $url ) . '">' . esc_html__( 'Edytuj stronę główną', 'gun-resort-one' ) . '</a></p></div>';
+}
+add_action( 'admin_notices', 'gro_block_migration_notice' );

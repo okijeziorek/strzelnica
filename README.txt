@@ -1,17 +1,20 @@
-GUN RESORT ONE — wersja 1.1.0
+GUN RESORT ONE — wersja 2.0.0
+
+WYMAGANIA
+- najnowszy stabilny WordPress (bazowo 7.0),
+- PHP 8.2 lub nowszy.
 
 INSTALACJA
 1. W panelu WordPress przejdź do: Wygląd → Motywy → Dodaj nowy → Wyślij motyw.
-2. Wybierz plik gun-resort-one-v1.1.0.zip i aktywuj motyw.
-3. Treści, zdjęcia, cennik, dane kontaktowe, kolor akcentu i odnośniki zmienisz w: Wygląd → Dostosuj.
-4. Menu przypiszesz do lokalizacji „Menu główne”. Bez przypisania motyw pokaże własne menu sekcji.
-5. Przycisk rezerwacji prowadzi do zewnętrznego systemu. Jego adres ustawisz w: Wygląd → Dostosuj → Strona główna — treść.
-6. Polityka prywatności pojawi się po wskazaniu strony w: Ustawienia → Prywatność.
+2. Wybierz archiwum gun-resort-one.zip i aktywuj motyw.
+3. Po pierwszym zalogowanym uruchomieniu motyw automatycznie przygotuje blokową stronę główną.
+4. Stronę edytuj w: Strony → Strona główna.
+5. Nagłówek, menu, stopkę i style edytuj w: Wygląd → Edytor.
 
-NAJWAŻNIEJSZE ZMIANY 1.1.0
-- dokładniejsze proporcje, typografia, ikony SVG, cienie i tło,
-- edytowalne zdjęcia hero/restauracji/hotelu oraz cennik,
-- edytowalne odnośniki menu restauracji, hotelu, mapy i dokumentów,
-- aktywna sekcja w menu, dopracowane menu mobilne i reduced motion,
-- obsługa odnośnika do zewnętrznego systemu rezerwacji,
-- dodatkowe szablony 404 i pojedynczego wpisu oraz theme.json.
+REZERWACJE
+Motyw nie posiada formularza rezerwacji. Zewnętrzną rezerwację dodaj jako zwykły blok Button z pełnym adresem HTTPS operatora.
+
+MIGRACJA 1.x → 2.0
+- treść hero, kafelki, obrazy, menu i górny pasek są przenoszone automatycznie;
+- stara strona i stare dane pozostają w bazie na potrzeby rollbacku;
+- migracja jest wykonywana tylko raz.
