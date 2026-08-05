@@ -30,16 +30,21 @@
         <?php else : ?>
             <a class="brand" href="<?php echo esc_url(home_url('/')); ?>">
                 <span class="brand-mark" aria-hidden="true">
-                    <svg viewBox="0 0 76 64">
-                        <g class="logo-ring">
-                            <circle cx="31" cy="32" r="24"/>
-                            <path d="M31 4v7M31 53v7M3 32h7M52 32h7M11 12l5 5M46 47l5 5M11 52l5-5M46 17l5-5"/>
+                    <svg viewBox="0 0 90 64">
+                        <defs>
+                            <clipPath id="gun-resort-logo-ring"><circle cx="25" cy="32" r="23"/></clipPath>
+                        </defs>
+                        <g class="logo-ring-lines" clip-path="url(#gun-resort-logo-ring)">
+                            <path d="M-8 18 25-8M-4 29 39-5M-2 40 51-3M1 51 58 6M7 59 62 16M18 65 66 27M31 67 66 39"/>
                         </g>
+                        <circle class="logo-ring-outline" cx="25" cy="32" r="23"/>
                         <g class="logo-glock">
-                            <path class="logo-glock-body" d="M13 20h39l10 5v8H37l-4 6H18l5-7H13z"/>
-                            <path class="logo-glock-grip" d="M36 33h16l-6 25H31z"/>
-                            <path class="logo-glock-cut" d="M27 33h14c0 7-4 11-11 11h-3"/>
-                            <path class="logo-glock-detail" d="M19 25h31M45 21v5M53 25h6"/>
+                            <path class="logo-glock-slide" d="M8 15h66l9 5v11H8z"/>
+                            <path class="logo-glock-frame" d="M13 31h54l-4 7H44l-5-4H13z"/>
+                            <path class="logo-glock-grip" d="M15 34h25l-4 27H7z"/>
+                            <path class="logo-glock-guard" d="M40 35h22c0 9-6 14-16 14h-6"/>
+                            <path class="logo-glock-trigger" d="m48 38-4 7"/>
+                            <path class="logo-glock-detail" d="M14 21h62M16 16v-4h7v4M70 15v-3h7v4M17 24h8M17 28h8M55 19h16v7H55z"/>
                         </g>
                     </svg>
                 </span>
