@@ -99,6 +99,8 @@ Następnie skonfiguruj ścieżki standardów i uruchamiaj PHPCS. Docelowo repozy
 
 ### Formularz
 
+Ta sekcja dotyczy usuniętej implementacji. W aktualnym motywie należy zamiast niej sprawdzić widoczność przycisku oraz poprawność odnośnika HTTPS do zewnętrznego operatora rezerwacji.
+
 Sprawdź przypadki:
 
 - poprawny e-mail;

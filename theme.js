@@ -47,33 +47,4 @@
         });
     }
 
-    const serviceSelect = document.getElementById('service');
-    document.querySelectorAll('.js-booking-link[data-service]').forEach(function (link) {
-        link.addEventListener('click', function () {
-            if (!serviceSelect) {
-                return;
-            }
-            const requestedService = link.getAttribute('data-service');
-            const exists = Array.from(serviceSelect.options).some(function (option) {
-                return option.value === requestedService;
-            });
-            if (exists) {
-                serviceSelect.value = requestedService;
-                serviceSelect.dispatchEvent(new Event('change', { bubbles: true }));
-            }
-        });
-    });
-
-    const bookingForm = document.querySelector('.booking-form');
-    if (bookingForm) {
-        bookingForm.addEventListener('submit', function () {
-            const button = bookingForm.querySelector('.form-submit');
-            if (button) {
-                button.disabled = true;
-                if (labels.sending) {
-                    button.textContent = labels.sending;
-                }
-            }
-        });
-    }
 })();

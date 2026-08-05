@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Usunięto wewnętrzny formularz, wysyłkę e-mail i typ treści usług.
+- Rezerwacje przekierowano do konfigurowalnego systemu zewnętrznego.
+
 ## 1.1.0
 - Dopracowano wygląd względem dostarczonej makiety.
 - Zastąpiono ikony CSS dokładniejszymi ikonami SVG.
