@@ -1,5 +1,9 @@
 # Gun Resort One
 
+[Uruchom kompletną stronę w WordPress Playground](https://playground.wordpress.net/?blueprint-url=https%3A%2F%2Fraw.githubusercontent.com%2Fokijeziorek%2Fstrzelnica%2Fmain%2Fblueprint.json)
+
+Blueprint instaluje motyw bezpośrednio z gałęzi `main`, aktywuje go i tworzy cztery edytowalne kafelki startowe. Domyślne treści hero, branding oraz grafika są dostępne od razu po uruchomieniu.
+
 Dynamiczny, responsywny motyw WordPress typu one-page przeznaczony dla obiektu łączącego strzelnicę, ofertę wydarzeń, gastronomię oraz noclegi.
 
 Projekt został zaprojektowany tak, aby treści biznesowe nie były wpisane na stałe w szablonach PHP. Oferta, usługi formularza, zalety, karty promocyjne i cennik są zarządzane z panelu WordPressa, natomiast dane globalne oraz komunikaty można edytować w Personalizatorze.

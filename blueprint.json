@@ -1,0 +1,41 @@
+{
+  "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+  "meta": {
+    "title": "Gun Resort",
+    "description": "Gotowy demonstrator motywu Gun Resort z treścią startową.",
+    "author": "okijeziorek",
+    "categories": ["theme", "demo"]
+  },
+  "landingPage": "/",
+  "preferredVersions": {
+    "php": "8.3",
+    "wp": "latest"
+  },
+  "features": {
+    "networking": true
+  },
+  "siteOptions": {
+    "blogname": "Gun Resort",
+    "blogdescription": "Poczuj emocje. Opanuj celność."
+  },
+  "steps": [
+    {
+      "step": "login",
+      "username": "admin"
+    },
+    {
+      "step": "installTheme",
+      "themeData": {
+        "resource": "git:directory",
+        "url": "https://github.com/okijeziorek/strzelnica",
+        "ref": "main",
+        "refType": "branch"
+      },
+      "options": {
+        "activate": true,
+        "targetFolderName": "strzelnica"
+      },
+      "ifAlreadyInstalled": "overwrite"
+    }
+  ]
+}

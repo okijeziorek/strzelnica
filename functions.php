@@ -21,4 +21,8 @@ function gro_setup() {
 }
 add_action('after_setup_theme', 'gro_setup');
 
+function gro_primary_menu_fallback() {
+    echo '<ul class="nav-list"><li><a href="#oferta">Oferta</a></li><li><a href="#pakiety">Pakiety</a></li></ul>';
+}
+
 require_once get_template_directory() . '/dynamic.php';
