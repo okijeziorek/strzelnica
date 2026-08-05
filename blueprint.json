@@ -2,7 +2,7 @@
   "$schema": "https://playground.wordpress.net/blueprint-schema.json",
   "meta": {
     "title": "Gun Resort",
-    "description": "Gotowy demonstrator motywu Gun Resort z treścią startową.",
+    "description": "Gotowy demonstrator responsywnego motywu Gun Resort z treścią startową.",
     "author": "okijeziorek",
     "categories": ["theme", "demo"]
   },

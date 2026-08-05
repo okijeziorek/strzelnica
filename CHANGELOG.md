@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.1.0
+
+- Dodano rozbudowaną stopkę z potwierdzonym telefonem i lokalizacją Toruń.
+- Dodano odnośnik Kontakt do nawigacji oraz poprawiono układ mobilny strony.
+- Aktualizacja migracji wykorzystuje istniejące obiekty, zachowuje zmiany wykonane w edytorze i nie tworzy duplikatów.
+- Rezerwacje pozostają poza WordPressem; tymczasowe akcje kontaktowe korzystają z telefonu.
+
 ## 2.0.0
 
 - Przebudowano motyw na natywny motyw blokowy WordPressa.
