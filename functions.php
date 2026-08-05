@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 define( 'GRO_THEME_VERSION', '2.1.0' );
-define( 'GRO_BLOCK_MIGRATION_VERSION', 3 );
+define( 'GRO_BLOCK_MIGRATION_VERSION', 4 );
 
 /**
  * Registers theme supports used by the block editor and front end.

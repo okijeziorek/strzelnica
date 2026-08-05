@@ -296,7 +296,6 @@ function gro_build_hero_blocks( $data ) {
 			'anchor'    => 'oferta',
 			'className' => 'gro-hero',
 			'align'     => 'wide',
-			'layout'    => array( 'type' => 'constrained' ),
 		),
 		'<section id="oferta" class="wp-block-group alignwide gro-hero">' . $columns . '</section>'
 	);
@@ -340,7 +339,6 @@ function gro_build_features_blocks( $features, $label ) {
 			'anchor'    => 'pakiety',
 			'className' => 'gro-features',
 			'align'     => 'wide',
-			'layout'    => array( 'type' => 'constrained' ),
 		),
 		'<section id="pakiety" class="wp-block-group alignwide gro-features">' . $heading . $grid . '</section>'
 	);
@@ -408,6 +406,21 @@ function gro_create_migrated_front_page() {
 	if ( $page_id ) {
 		$page    = get_post( $page_id );
 		$content = $page instanceof WP_Post ? (string) $page->post_content : '';
+		$content = str_replace(
+			array(
+				'"className":"gro-hero","align":"wide","layout":{"type":"constrained"}',
+				'"className":"gro-features","align":"wide","layout":{"type":"constrained"}',
+				'"className":"gro-hero","layout":{"type":"constrained"}',
+				'"className":"gro-features","layout":{"type":"constrained"}',
+			),
+			array(
+				'"className":"gro-hero","align":"wide"',
+				'"className":"gro-features","align":"wide"',
+				'"className":"gro-hero","align":"wide"',
+				'"className":"gro-features","align":"wide"',
+			),
+			$content
+		);
 
 		$result = wp_update_post(
 			wp_slash(
