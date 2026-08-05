@@ -63,7 +63,7 @@
       },
       "button": {
         "border": { "radius": "7px" },
-        "color": { "background": "#e65c0b", "text": "#ffffff" },
+        "color": { "background": "#c44700", "text": "#ffffff" },
         "typography": { "fontWeight": "700" },
         "spacing": { "padding": { "top": "0.7rem", "right": "1.4rem", "bottom": "0.7rem", "left": "1.4rem" } }
       }

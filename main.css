@@ -336,6 +336,28 @@ button:focus-visible {
     background: linear-gradient(145deg, #323333, var(--gro-panel));
 }
 
+.gro-footer-grid {
+    margin: 0;
+    gap: clamp(24px, 5vw, 70px);
+}
+
+.gro-site-footer h3 {
+    margin: 0 0 10px;
+    color: var(--gro-text);
+    font-size: 1.15rem;
+}
+
+.gro-site-footer p {
+    margin-top: 8px;
+}
+
+.gro-site-footer a {
+    color: var(--gro-text);
+    text-decoration: underline;
+    text-decoration-color: rgba(230, 92, 11, 0.6);
+    text-underline-offset: 4px;
+}
+
 .screen-reader-text {
     position: absolute !important;
     width: 1px;
@@ -426,6 +448,7 @@ button:focus-visible {
     .gro-feature-grid > .wp-block-column {
         flex-basis: calc(50% - 11px) !important;
     }
+
 }
 
 @media (max-width: 480px) {
@@ -451,6 +474,10 @@ button:focus-visible {
 
     .gro-feature-grid > .wp-block-column {
         flex-basis: 100% !important;
+    }
+
+    .gro-site-footer {
+        padding: 24px 20px;
     }
 }
 

@@ -295,9 +295,10 @@ function gro_build_hero_blocks( $data ) {
 			'tagName'   => 'section',
 			'anchor'    => 'oferta',
 			'className' => 'gro-hero',
+			'align'     => 'wide',
 			'layout'    => array( 'type' => 'constrained' ),
 		),
-		'<section id="oferta" class="wp-block-group gro-hero">' . $columns . '</section>'
+		'<section id="oferta" class="wp-block-group alignwide gro-hero">' . $columns . '</section>'
 	);
 }
 
@@ -338,9 +339,10 @@ function gro_build_features_blocks( $features, $label ) {
 			'tagName'   => 'section',
 			'anchor'    => 'pakiety',
 			'className' => 'gro-features',
+			'align'     => 'wide',
 			'layout'    => array( 'type' => 'constrained' ),
 		),
-		'<section id="pakiety" class="wp-block-group gro-features">' . $heading . $grid . '</section>'
+		'<section id="pakiety" class="wp-block-group alignwide gro-features">' . $heading . $grid . '</section>'
 	);
 }
 
@@ -388,7 +390,7 @@ function gro_find_migration_post( $post_type ) {
 			'posts_per_page' => 1,
 			'fields'         => 'ids',
 			'meta_key'       => '_gro_block_migration_version',
-			'meta_value'     => GRO_BLOCK_MIGRATION_VERSION,
+			'meta_compare'   => 'EXISTS',
 		)
 	);
 
@@ -402,19 +404,33 @@ function gro_find_migration_post( $post_type ) {
  */
 function gro_create_migrated_front_page() {
 	$page_id = gro_find_migration_post( 'page' );
-	$data    = array(
-		'post_type'    => 'page',
-		'post_status'  => 'draft',
-		'post_title'   => __( 'Strona główna', 'gun-resort-one' ),
-		'post_name'    => 'strona-glowna-blokowa',
-		'post_content' => gro_build_migrated_front_page(),
-	);
 
 	if ( $page_id ) {
-		$data['ID'] = $page_id;
-		$result     = wp_update_post( wp_slash( $data ), true );
+		$page    = get_post( $page_id );
+		$content = $page instanceof WP_Post ? (string) $page->post_content : '';
+
+		$result = wp_update_post(
+			wp_slash(
+				array(
+					'ID'           => $page_id,
+					'post_content' => $content,
+				)
+			),
+			true
+		);
 	} else {
-		$result = wp_insert_post( wp_slash( $data ), true );
+		$result = wp_insert_post(
+			wp_slash(
+				array(
+					'post_type'    => 'page',
+					'post_status'  => 'draft',
+					'post_title'   => __( 'Strona główna', 'gun-resort-one' ),
+					'post_name'    => 'strona-glowna-blokowa',
+					'post_content' => gro_build_migrated_front_page(),
+				)
+			),
+			true
+		);
 	}
 
 	if ( ! is_wp_error( $result ) ) {
@@ -460,6 +476,10 @@ function gro_build_navigation_links() {
 			array(
 				'label' => __( 'Pakiety', 'gun-resort-one' ),
 				'url'   => home_url( '/#pakiety' ),
+			),
+			array(
+				'label' => __( 'Kontakt', 'gun-resort-one' ),
+				'url'   => home_url( '/#kontakt' ),
 			),
 		);
 	}
@@ -680,14 +700,20 @@ function gro_run_block_migration() {
 		return $page_id;
 	}
 
-	$navigation_id = gro_create_navigation();
-	if ( is_wp_error( $navigation_id ) ) {
-		return $navigation_id;
+	$navigation_id = gro_find_migration_post( 'wp_navigation' );
+	if ( ! $navigation_id ) {
+		$navigation_id = gro_create_navigation();
+		if ( is_wp_error( $navigation_id ) ) {
+			return $navigation_id;
+		}
 	}
 
-	$template_part_id = gro_create_header_template_part( $navigation_id );
-	if ( is_wp_error( $template_part_id ) ) {
-		return $template_part_id;
+	$template_part_id = gro_find_migration_post( 'wp_template_part' );
+	if ( ! $template_part_id ) {
+		$template_part_id = gro_create_header_template_part( $navigation_id );
+		if ( is_wp_error( $template_part_id ) ) {
+			return $template_part_id;
+		}
 	}
 
 	$published = wp_update_post(
