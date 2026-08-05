@@ -56,6 +56,8 @@ Kod nie powinien zakładać konkretnej nazwy karty. Znaczenie biznesowe wynika z
 
 ## Usługi
 
+> Ten typ wpisu został usunięty z aktywnego motywu po przeniesieniu rezerwacji do zewnętrznego operatora. Opis pozostaje wyłącznie jako informacja historyczna.
+
 Typ wpisu: `gro_service`
 
 Przeznaczenie: źródło listy wyboru w formularzu.

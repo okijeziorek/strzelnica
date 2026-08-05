@@ -2,7 +2,7 @@
 
 ## Edycja strony głównej
 
-Panel `Wygląd → Dostosuj → Strona główna — treść` pozwala edytować górny pasek, sekcję główną, zdjęcie, teksty i adresy przycisków oraz włączać menu i przycisk rezerwacji. Nazwę strony i logo ustawia się w `Wygląd → Dostosuj → Tożsamość witryny`.
+Panel `Wygląd → Dostosuj → Strona główna — treść` pozwala edytować górny pasek, sekcję główną, zdjęcie, teksty i adresy przycisków oraz włączać menu i przycisk zewnętrznej rezerwacji. Nazwę strony i logo ustawia się w `Wygląd → Dostosuj → Tożsamość witryny`.
 
 Cztery kafelki są wpisami w sekcji `Zalety`. Każdy kafelek ma edytowalny tytuł, opis, obrazek wyróżniający i kolejność. Można również dodawać nowe kafelki, usuwać istniejące lub zapisywać je jako szkice, aby ukryć je na stronie.
 
@@ -19,28 +19,14 @@ Pola zarejestrowane przez motyw znajdują się w `Wygląd → Dostosuj → Stron
 - `Nagłówek główny` — główny nagłówek strony;
 - `Opis główny` — tekst pod nagłówkiem;
 - `Przycisk oferty` — etykieta przycisku prowadzącego do oferty;
-- `Przycisk rezerwacji` — etykieta przycisku prowadzącego do formularza;
+- `Przycisk zewnętrznej rezerwacji` — etykieta przycisku;
+- `Adres zewnętrznego systemu rezerwacji` — pełny adres URL przekazany przez operatora;
 - `Zdjęcie główne` — obraz tła sekcji otwierającej.
 
 ### Nagłówki sekcji
 
 - `Etykieta sekcji zalet` — nazwa dostępnościowa sekcji zalet;
 - `Nagłówek cennika` — tytuł nad listą cen;
-- `Nagłówek formularza` — tytuł formularza.
-
-### Formularz
-
-- `Pole wyboru usługi`;
-- `Pole imienia i nazwiska`;
-- `Pole telefonu lub e-maila`;
-- `Pole wiadomości`;
-- `Przycisk wysłania`;
-- `Notatka formularza`;
-- `Komunikat sukcesu`;
-- `Komunikat błędu`;
-- `Wysyłanie formularza`.
-
-Teksty te odpowiadają za etykiety, podpowiedzi i komunikaty interfejsu. Należy stosować jednoznaczne sformułowania, zwłaszcza w formularzu.
 
 ### Menu mobilne
 
@@ -53,13 +39,10 @@ Wartości przekazywane są do JavaScriptu przez `wp_localize_script()`.
 
 - `Telefon` — wyświetlany i używany w odnośniku `tel:`;
 - `E-mail kontaktowy` — publiczny adres kontaktowy;
-- `E-mail odbiorcy rezerwacji` — adres, na który trafiają zgłoszenia;
 - `Adres` — adres obiektu;
 - `Godziny otwarcia` — tekst informacyjny;
 - `Tekst górnego paska` — krótki komunikat w nagłówku;
 - `Opis w stopce` — opis działalności.
-
-Adres odbiorcy rezerwacji musi być prawidłowym adresem e-mail. Gdy pole jest puste albo niepoprawne, formularz nie wyśle wiadomości.
 
 ### Odnośniki
 
@@ -93,16 +76,6 @@ Obsługiwane pola:
 - obraz wyróżniający;
 - kolejność.
 
-### Usługi (`gro_service`)
-
-Obsługiwane pola:
-
-- tytuł;
-- treść;
-- kolejność.
-
-Tytuł jest wartością wysyłaną przez formularz. Zmiana tytułu zmienia więc także nazwę usługi w zgłoszeniach.
-
 ### Cennik (`gro_price`)
 
 Obsługiwane pola:
@@ -122,7 +95,7 @@ Pole kolejności jest dostępne dzięki obsłudze `page-attributes`. Warto stoso
 
 ## Menu i odnośniki do sekcji
 
-Sekcje strony używają identyfikatorów takich jak `oferta`, `pakiety`, `cennik`, `rezerwacja` i `kontakt`. Własne odnośniki menu mogą prowadzić do `/#identyfikator`.
+Sekcje strony używają identyfikatorów takich jak `oferta`, `pakiety`, `cennik` i `kontakt`. Własne odnośniki menu mogą prowadzić do `/#identyfikator`. Rezerwacja powinna prowadzić do pełnego adresu HTTPS zewnętrznego operatora.
 
 Po zmianie identyfikatorów w kodzie należy zaktualizować menu, JavaScript obserwujący sekcje i wszystkie przyciski wewnętrzne.
 

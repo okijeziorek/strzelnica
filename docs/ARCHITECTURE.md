@@ -14,7 +14,6 @@ Plik `dynamic.php` rejestruje:
 - pola Personalizatora;
 - ładowanie CSS i JavaScriptu;
 - dane przekazywane do JavaScriptu;
-- obsługę formularza;
 - funkcje pomocnicze do pobierania treści.
 
 Plik `functions.php` ładuje dynamiczną konfigurację oraz podstawowe mechanizmy motywu.
@@ -31,13 +30,12 @@ Typy wpisów:
 ```text
 gro_feature  → zalety
 gro_card     → karty oferty
-gro_service  → usługi formularza
 gro_price    → pozycje cennika
 ```
 
 ### 3. Warstwa widoków
 
-- `front-page.php` — strona główna i formularz;
+- `front-page.php` — strona główna;
 - `header.php` — nagłówek, marka i menu;
 - `footer.php` — dane kontaktowe, prawne i społecznościowe;
 - `index.php` — ogólny widok listy treści;
@@ -50,7 +48,7 @@ gro_price    → pozycje cennika
 - `main.css` — układ i wygląd komponentów;
 - `style.css` — metadane motywu;
 - `theme.json` — ustawienia edytora i funkcji WordPressa;
-- `theme.js` — menu mobilne, preselektor usługi, obserwacja sekcji i stan wysyłania formularza.
+- `theme.js` — obsługa menu mobilnego.
 
 ## Przepływ renderowania strony głównej
 
@@ -62,7 +60,9 @@ gro_price    → pozycje cennika
 6. CSS i JS są dołączane przez kolejkę WordPressa.
 7. Teksty dla JavaScriptu są przekazywane przez `wp_localize_script()`.
 
-## Przepływ formularza
+## Historyczny przepływ formularza
+
+Poniższy przepływ opisuje usuniętą implementację. Aktywny motyw kieruje użytkownika bezpośrednio do zewnętrznego operatora rezerwacji.
 
 1. Formularz wysyła żądanie `POST` do `admin-post.php`.
 2. Pole `action` wskazuje procedurę obsługi.

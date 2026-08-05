@@ -8,7 +8,6 @@ Minimalne wymagania deklarowane przez motyw:
 - PHP 7.4 lub nowszy;
 - MySQL albo MariaDB zgodna z wymaganiami używanej wersji WordPressa;
 - serwer HTTP Apache lub Nginx;
-- możliwość wysyłania poczty przez `wp_mail()`;
 - uprawnienia administratora WordPressa.
 
 Dla wdrożenia publicznego zaleca się HTTPS, kopie zapasowe, środowisko testowe i SMTP z uwierzytelnieniem.
@@ -61,8 +60,6 @@ W `Ustawienia → Ogólne` ustaw:
 - język witryny;
 - administracyjny adres e-mail.
 
-Strefa czasowa ma znaczenie dla walidacji dat formularza.
-
 ## 5. Strona główna
 
 Motyw posiada `front-page.php`. W typowej instalacji WordPress użyje go jako widoku strony głównej.
@@ -79,7 +76,6 @@ Po aktywacji sprawdź `Ustawienia → Czytanie`. Jeżeli używana jest statyczna
 /#oferta
 /#pakiety
 /#cennik
-/#rezerwacja
 /#kontakt
 ```
 
@@ -97,7 +93,6 @@ Po aktywacji w panelu powinny pojawić się pozycje:
 
 Dodaj i opublikuj co najmniej:
 
-- jedną usługę, aby formularz miał dostępną wartość;
 - jedną pozycję cennika;
 - jedną zaletę;
 - jedną kartę oferty.
@@ -110,18 +105,9 @@ Przejdź do `Wygląd → Dostosuj → Treść strony i komunikaty` i uzupełnij 
 
 Szczegóły pól opisano w `CONFIGURATION.md`.
 
-## 9. Poczta wychodząca
+## 9. Rezerwacje zewnętrzne
 
-WordPress używa funkcji `wp_mail()`. Sama poprawna odpowiedź funkcji nie dowodzi, że wiadomość została dostarczona do skrzynki odbiorczej.
-
-Zalecany przebieg:
-
-1. zainstaluj sprawdzoną wtyczkę SMTP;
-2. skonfiguruj konto nadawcze;
-3. ustaw SPF, DKIM i DMARC dla domeny;
-4. wykonaj test poczty;
-5. wyślij próbny formularz;
-6. sprawdź skrzynkę odbiorczą i folder spam.
+W `Wygląd → Dostosuj → Strona główna — treść` ustaw etykietę przycisku i pełny adres HTTPS systemu rezerwacyjnego. Motyw nie wysyła ani nie przechowuje danych rezerwacji.
 
 ## 10. Kontrola po instalacji
 
@@ -130,10 +116,7 @@ Sprawdź:
 - stronę główną na komputerze i telefonie;
 - otwieranie i zamykanie menu mobilnego;
 - wszystkie odnośniki;
-- listę usług w formularzu;
-- walidację błędnych pól;
-- wysyłkę poprawnego zgłoszenia;
-- komunikat powodzenia i błędu;
+- odnośnik do zewnętrznego systemu rezerwacji;
 - stronę 404;
 - pojedynczy wpis i zwykłą stronę;
 - logo, faviconę i tytuł karty;

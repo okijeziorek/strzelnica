@@ -4,7 +4,13 @@
 
 Dokument opisuje zabezpieczenia obecne w motywie oraz działania wymagane przed wdrożeniem produkcyjnym. Motyw nie zastępuje konfiguracji bezpieczeństwa całego WordPressa, serwera, poczty ani infrastruktury.
 
-## Zabezpieczenia formularza
+## Rezerwacje zewnętrzne
+
+Aktywny motyw nie zawiera formularza rezerwacyjnego, nie wysyła wiadomości przez `wp_mail()` i nie przechowuje danych klientów. Przycisk rezerwacji prowadzi do adresu HTTPS skonfigurowanego przez administratora. Za ochronę danych, płatności i dostępność odpowiada wybrany operator zewnętrzny.
+
+## Historyczna implementacja formularza
+
+Poniższy opis dotyczy usuniętej implementacji i pozostaje jedynie dokumentacją historyczną.
 
 ### Metoda żądania
 
