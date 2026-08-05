@@ -21,6 +21,19 @@ function gro_setup() {
 }
 add_action('after_setup_theme', 'gro_setup');
 
+/**
+ * Tymczasowe przełączniki widoczności elementów interfejsu.
+ * Ustaw wartość na true, aby ponownie pokazać wybrany element.
+ */
+function gro_ui_feature_enabled($feature) {
+    $features = [
+        'primary_navigation' => false,
+        'booking_cta' => false,
+    ];
+
+    return (bool) ($features[$feature] ?? true);
+}
+
 function gro_primary_menu_fallback() {
     echo '<ul class="nav-list"><li><a href="#oferta">Oferta</a></li><li><a href="#pakiety">Pakiety</a></li></ul>';
 }

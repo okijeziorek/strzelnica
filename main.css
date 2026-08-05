@@ -163,6 +163,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .feature-card p { max-width: 190px; margin: 0 auto; color: var(--muted); font-size: 13px; line-height: 1.18; }
 .line-icon { width: 66px; height: 66px; margin: 0 auto; color: #d56b39; }
 .line-icon svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.line-icon .feature-glock-icon { display: block; width: 100%; height: 100%; object-fit: contain; }
 
 .experience-panel { margin-bottom: 54px; padding: 34px; display: grid; grid-template-columns: repeat(2,1fr); gap: 28px; border-radius: 15px; background: linear-gradient(145deg, #2a2b2b, #1d1e1e); }
 .experience-card { overflow: hidden; border: 1px solid rgba(255,255,255,.12); border-radius: 10px; background: #242525; box-shadow: 0 10px 20px rgba(0,0,0,.35); }
