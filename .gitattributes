@@ -10,5 +10,7 @@
 /blueprint.json export-ignore
 /preview.html export-ignore
 /README.md export-ignore
+/hotel.jpg export-ignore
+/restaurant.jpg export-ignore
 /podglad-*.png export-ignore
 /slack-*.png export-ignore
