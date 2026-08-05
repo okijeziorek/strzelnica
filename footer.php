@@ -1,4 +1,5 @@
 </main>
+<?php if (!is_front_page()) : ?>
 <footer class="site-footer" id="kontakt">
     <div class="footer-grid">
         <?php if (gro_dynamic_setting('gro_footer_about')) : ?>
@@ -42,6 +43,7 @@
         </div>
     </div>
 </footer>
+<?php endif; ?>
 </div>
 <?php wp_footer(); ?>
 </body>
