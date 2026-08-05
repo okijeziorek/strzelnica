@@ -47,6 +47,15 @@ Szczegółowe kroki znajdują się w [dokumentacji instalacji](docs/INSTALLATION
 
 ## Zarządzanie treścią
 
+Wszystkie treści widoczne na stronie głównej można zmienić z panelu WordPressa:
+
+- `Wygląd → Dostosuj → Strona główna — treść` — górny pasek, nagłówek, opis, zdjęcie główne, teksty i odnośniki przycisków oraz widoczność menu i przycisku rezerwacji;
+- `Wygląd → Dostosuj → Tożsamość witryny` — nazwa strony i logo;
+- `Zalety` — tytuł, opis, grafika i kolejność każdego kafelka;
+- `Wygląd → Menu` — pozycje menu i ich odnośniki.
+
+Nie trzeba edytować plików PHP ani CSS, aby zmienić treści, grafiki, liczbę kafelków lub ich kolejność.
+
 ### Zalety
 
 Każdy wpis typu `Zaleta` tworzy pojedynczą kartę w sekcji zalet. Tytuł jest nagłówkiem, treść opisem, obrazek wyróżniający grafiką, a kolejność można ustalać polem kolejności.

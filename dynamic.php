@@ -6,7 +6,9 @@ function gro_dynamic_defaults() {
         'gro_hero_title' => "Poczuj emocje.\nOpanuj celność.\nGun Resort.",
         'gro_hero_text' => 'Opanuj emocje i celność w bezpiecznych warunkach pod okiem doświadczonych instruktorów.',
         'gro_offer_label' => 'Zobacz ofertę',
+        'gro_offer_url' => '#pakiety',
         'gro_booking_label' => 'Rezerwuj online',
+        'gro_booking_url' => '#rezerwacja',
         'gro_features_label' => 'Dlaczego Gun Resort',
         'gro_phone' => '690 629 112',
         'gro_hours' => 'Pn–Pt 10:00–22:00',
@@ -19,6 +21,14 @@ function gro_dynamic_defaults() {
 function gro_dynamic_setting($key) {
     $defaults = gro_dynamic_defaults();
     return trim((string) get_theme_mod($key, $defaults[$key] ?? ''));
+}
+
+function gro_dynamic_sanitize_link($value) {
+    $value = trim((string) $value);
+    if (0 === strpos($value, '#')) {
+        return '#' . sanitize_title(substr($value, 1));
+    }
+    return esc_url_raw($value);
 }
 
 function gro_dynamic_items($type) {
@@ -102,7 +112,8 @@ function gro_dynamic_feature_icon($index) {
 
 function gro_dynamic_customize($customizer) {
     $customizer->add_section('gro_dynamic_content', [
-        'title' => 'Treść strony i komunikaty',
+        'title' => 'Strona główna — treść',
+        'description' => 'Edytuj górny pasek, sekcję główną, przyciski i elementy nawigacji. Cztery kafelki edytujesz osobno w panelu Zalety.',
         'priority' => 20,
     ]);
 
@@ -110,7 +121,9 @@ function gro_dynamic_customize($customizer) {
         'gro_hero_title' => ['Nagłówek główny', 'textarea'],
         'gro_hero_text' => ['Opis główny', 'textarea'],
         'gro_offer_label' => ['Przycisk oferty', 'text'],
+        'gro_offer_url' => ['Odnośnik przycisku oferty (adres lub #sekcja)', 'text'],
         'gro_booking_label' => ['Przycisk rezerwacji', 'text'],
+        'gro_booking_url' => ['Odnośnik przycisku rezerwacji (adres lub #sekcja)', 'text'],
         'gro_features_label' => ['Etykieta sekcji zalet', 'text'],
         'gro_prices_label' => ['Nagłówek cennika', 'text'],
         'gro_form_label' => ['Nagłówek formularza', 'text'],
@@ -145,8 +158,25 @@ function gro_dynamic_customize($customizer) {
         if ('textarea' === $field[1]) { $sanitize = 'sanitize_textarea_field'; }
         if ('email' === $field[1]) { $sanitize = 'sanitize_email'; }
         if ('url' === $field[1]) { $sanitize = 'esc_url_raw'; }
-        $customizer->add_setting($id, ['default' => '', 'sanitize_callback' => $sanitize]);
+        if (in_array($id, ['gro_offer_url', 'gro_booking_url'], true)) { $sanitize = 'gro_dynamic_sanitize_link'; }
+        $defaults = gro_dynamic_defaults();
+        $customizer->add_setting($id, ['default' => $defaults[$id] ?? '', 'sanitize_callback' => $sanitize]);
         $customizer->add_control($id, ['label' => $field[0], 'section' => 'gro_dynamic_content', 'type' => $field[1]]);
+    }
+
+    foreach ([
+        'gro_show_primary_navigation' => ['Pokaż menu główne', false],
+        'gro_show_booking_cta' => ['Pokaż przycisk rezerwacji', false],
+    ] as $id => $control) {
+        $customizer->add_setting($id, [
+            'default' => $control[1],
+            'sanitize_callback' => static function ($value) { return (bool) $value; },
+        ]);
+        $customizer->add_control($id, [
+            'label' => $control[0],
+            'section' => 'gro_dynamic_content',
+            'type' => 'checkbox',
+        ]);
     }
 
     $customizer->add_setting('gro_hero_image', ['default' => 0, 'sanitize_callback' => 'absint']);
@@ -157,6 +187,20 @@ function gro_dynamic_customize($customizer) {
     ]));
 }
 add_action('customize_register', 'gro_dynamic_customize', 5);
+
+function gro_dynamic_admin_notice() {
+    $screen = get_current_screen();
+    if (!$screen || 'dashboard' !== $screen->base || !current_user_can('edit_theme_options')) {
+        return;
+    }
+    $customize_url = admin_url('customize.php');
+    ?>
+    <div class="notice notice-info is-dismissible">
+        <p><strong><?php esc_html_e('Edycja strony Gun Resort', 'gun-resort-one'); ?></strong> — <?php esc_html_e('nagłówek, zdjęcie główne, przyciski i dane w górnym pasku zmienisz w Personalizatorze. Cztery kafelki zmienisz w sekcji „Zalety”.', 'gun-resort-one'); ?> <a href="<?php echo esc_url($customize_url); ?>"><?php esc_html_e('Edytuj stronę główną', 'gun-resort-one'); ?></a></p>
+    </div>
+    <?php
+}
+add_action('admin_notices', 'gro_dynamic_admin_notice');
 
 function gro_dynamic_assets() {
     $version = wp_get_theme()->get('Version');
