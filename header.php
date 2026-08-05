@@ -29,7 +29,20 @@
             <div class="brand custom-brand"><?php the_custom_logo(); ?></div>
         <?php else : ?>
             <a class="brand" href="<?php echo esc_url(home_url('/')); ?>">
-                <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 64 64"><path d="M10 42a24 24 0 1 1 44 0"/><path d="M17 38l-5-2m10-8-4-4m14-3v-6m10 13 4-4m1 14 5-2"/><path class="needle" d="M32 42l13-16"/><circle cx="32" cy="42" r="3"/></svg></span>
+                <span class="brand-mark" aria-hidden="true">
+                    <svg viewBox="0 0 76 64">
+                        <g class="logo-ring">
+                            <circle cx="31" cy="32" r="24"/>
+                            <path d="M31 4v7M31 53v7M3 32h7M52 32h7M11 12l5 5M46 47l5 5M11 52l5-5M46 17l5-5"/>
+                        </g>
+                        <g class="logo-glock">
+                            <path class="logo-glock-body" d="M13 20h39l10 5v8H37l-4 6H18l5-7H13z"/>
+                            <path class="logo-glock-grip" d="M36 33h16l-6 25H31z"/>
+                            <path class="logo-glock-cut" d="M27 33h14c0 7-4 11-11 11h-3"/>
+                            <path class="logo-glock-detail" d="M19 25h31M45 21v5M53 25h6"/>
+                        </g>
+                    </svg>
+                </span>
                 <span class="brand-text"><b>Gun</b><strong>Resort</strong></span>
             </a>
         <?php endif; ?>
