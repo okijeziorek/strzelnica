@@ -45,11 +45,11 @@ Zaakceptowaną decyzję ze Slacka należy skopiować do issue wraz z permalinkie
 
 Sprawdź szerokości 320, 375, 768, 1024 i 1440 px oraz powiększenie 200%.
 
-- strona główna ma nagłówek, hero i cztery kafelki;
+- strona główna ma nagłówek, hero, cztery zalety, cztery pakiety, trzy kroki i stopkę;
 - wszystkie elementy można przesuwać, usuwać i duplikować;
 - podmiana obrazu oraz zmiana kolumn zapisują się poprawnie;
 - menu mobilne działa klawiaturą i ma widoczny fokus;
-- link rezerwacji prowadzi do zewnętrznego HTTPS;
+- roboczy link rezerwacji prowadzi do `#kontakt`, a po konfiguracji do zewnętrznego HTTPS;
 - brak formularza i lokalnego przetwarzania danych rezerwacji;
 - migracja uruchamia się raz i nie tworzy duplikatów;
 - stara strona i dane pozostają dostępne do rollbacku.

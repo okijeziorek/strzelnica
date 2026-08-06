@@ -1,5 +1,5 @@
 :root {
-    --gro-bg: #9da9aa;
+    --gro-bg: #101111;
     --gro-panel: #242525;
     --gro-panel-dark: #171818;
     --gro-text: #f4f3f0;
@@ -7,7 +7,7 @@
     --gro-line: rgba(255, 255, 255, 0.12);
     --gro-orange: #e65c0b;
     --gro-shadow: 0 18px 36px rgba(8, 13, 15, 0.34), 0 2px 7px rgba(0, 0, 0, 0.3);
-    --gro-wide: 1110px;
+    --gro-wide: 1320px;
 }
 
 * {
@@ -23,10 +23,7 @@ body,
 .editor-styles-wrapper {
     color: var(--gro-text);
     font-family: var(--wp--preset--font-family--gun-condensed, "Arial Narrow", Arial, sans-serif);
-    background:
-        radial-gradient(circle at 7% 12%, rgba(255, 255, 255, 0.5), transparent 23%),
-        radial-gradient(circle at 93% 72%, rgba(255, 255, 255, 0.34), transparent 25%),
-        linear-gradient(136deg, #c3cbcb 0%, #839396 47%, #c2c9c8 100%);
+    background: linear-gradient(135deg, #121313, #1d1e1e 55%, #111212);
 }
 
 body {
@@ -41,7 +38,7 @@ body::before {
     inset: 0;
     pointer-events: none;
     content: "";
-    opacity: 0.24;
+    opacity: 0.08;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E");
 }
 
@@ -61,14 +58,15 @@ button:focus-visible {
 }
 
 .wp-site-blocks {
-    width: min(calc(100% - 34px), var(--gro-wide));
-    margin: 20px auto 30px;
+    width: min(calc(100% - 32px), var(--gro-wide));
+    margin: 0 auto;
 }
 
 .gro-site-header,
 .gro-site-footer,
 .gro-hero,
 .gro-feature-card,
+.gro-package-card,
 .gro-content-panel {
     border: 1px solid rgba(255, 255, 255, 0.07);
     box-shadow: var(--gro-shadow);
@@ -78,13 +76,13 @@ button:focus-visible {
     position: relative;
     z-index: 30;
     overflow: visible;
-    margin-bottom: 38px;
+    margin-bottom: 0;
     background: linear-gradient(#2a2b2b, var(--gro-panel-dark));
 }
 
 .gro-utility {
     min-height: 34px;
-    padding: 0 26px;
+    padding: 0 clamp(20px, 4vw, 52px);
     color: #b7b3ad;
     font-size: 0.75rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.07);
@@ -101,9 +99,9 @@ button:focus-visible {
 }
 
 .gro-main-nav {
-    min-height: 82px;
-    padding: 8px 26px;
-    gap: 30px;
+    min-height: 84px;
+    padding: 8px clamp(20px, 4vw, 52px);
+    gap: clamp(18px, 2.5vw, 38px);
 }
 
 .gro-brand {
@@ -137,6 +135,10 @@ button:focus-visible {
 
 .gro-primary-navigation {
     margin-left: auto;
+}
+
+.gro-primary-navigation .wp-block-navigation__container {
+    gap: clamp(14px, 1.7vw, 28px);
 }
 
 .gro-primary-navigation .wp-block-navigation-item__content {
@@ -192,33 +194,55 @@ button:focus-visible {
     margin-block-start: 0;
 }
 
+.gro-site-main > .wp-block-post-content > * {
+    margin-block-start: 0;
+}
+
 .gro-hero {
     overflow: hidden;
-    min-height: 462px;
+    min-height: 540px;
     padding: 0;
-    border-radius: 18px;
+    border-radius: 0;
     background: linear-gradient(145deg, #090b0c, #1d1e1e);
 }
 
+.gro-hero.wp-block-cover {
+    padding: 0;
+}
+
+.gro-hero .wp-block-cover__background {
+    background: linear-gradient(90deg, rgba(3, 4, 4, 0.96) 0%, rgba(3, 4, 4, 0.72) 38%, rgba(3, 4, 4, 0.08) 72%) !important;
+    opacity: 1 !important;
+}
+
+.gro-hero .wp-block-cover__inner-container {
+    width: 100%;
+}
+
 .gro-hero__columns {
+    position: relative;
     align-items: stretch !important;
-    min-height: 462px;
+    min-height: 540px;
     margin: 0;
     gap: 0;
 }
 
 .gro-hero__copy {
+    position: relative;
+    z-index: 2;
     display: flex;
     flex-basis: 52% !important;
     flex-direction: column;
     justify-content: center;
-    padding: 52px 54px;
-    background: linear-gradient(90deg, rgba(5, 7, 8, 0.98), rgba(5, 7, 8, 0.87));
+    width: min(70%, 820px);
+    margin: 0;
+    padding: clamp(42px, 4.5vw, 64px);
+    background: transparent;
 }
 
 .gro-hero__title {
     margin: 0 0 14px;
-    font-size: clamp(2.7rem, 5vw, 4.125rem);
+    font-size: clamp(2.8rem, 4.2vw, 4rem);
     line-height: 0.98;
     letter-spacing: -2px;
     text-wrap: balance;
@@ -228,7 +252,7 @@ button:focus-visible {
     max-width: 430px;
     margin: 0 0 25px;
     color: #e1dfdb;
-    font-size: 1.0625rem;
+    font-size: 1.125rem;
 }
 
 .gro-hero__actions {
@@ -236,9 +260,10 @@ button:focus-visible {
 }
 
 .gro-hero__visual {
-    position: relative;
-    flex-basis: 48% !important;
-    min-height: 462px;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    min-height: 540px;
 }
 
 .gro-hero__image,
@@ -259,16 +284,39 @@ button:focus-visible {
     background: linear-gradient(90deg, rgba(5, 7, 8, 0.9), transparent 38%);
 }
 
-.gro-features {
-    margin: 34px 20px 72px;
+.gro-section-title {
+    margin: 0 0 clamp(28px, 4vw, 46px);
+    text-align: center;
+    font-size: clamp(2rem, 3.3vw, 2.8rem);
+    line-height: 1.1;
 }
 
-.gro-feature-grid {
+.gro-features,
+.gro-packages,
+.gro-first-time {
+    padding: clamp(58px, 7vw, 92px) clamp(20px, 4vw, 58px);
+    margin: 0;
+}
+
+.gro-features,
+.gro-first-time {
+    background: linear-gradient(135deg, #171818, #202121);
+}
+
+.gro-packages {
+    background: #242525;
+}
+
+.gro-feature-grid,
+.gro-package-grid,
+.gro-step-grid {
     flex-wrap: wrap !important;
-    gap: 22px;
+    gap: clamp(14px, 1.7vw, 24px);
+    margin: 0;
 }
 
-.gro-feature-grid > .wp-block-column {
+.gro-feature-grid > .wp-block-column,
+.gro-package-grid > .wp-block-column {
     min-width: 0;
     flex: 1 1 0 !important;
 }
@@ -278,8 +326,9 @@ button:focus-visible {
     min-height: 196px;
     padding: 23px 16px 18px;
     text-align: center;
-    border-radius: 11px;
-    background: linear-gradient(145deg, #2a2b2b, #1d1e1e);
+    border-radius: 8px;
+    background: transparent;
+    box-shadow: none;
     transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
 }
 
@@ -314,6 +363,108 @@ button:focus-visible {
     line-height: 1.18;
 }
 
+.gro-package-card {
+    display: flex;
+    overflow: hidden;
+    height: 100%;
+    min-height: 455px;
+    flex-direction: column;
+    padding: 0 0 20px;
+    border-radius: 10px;
+    background: linear-gradient(145deg, #2b2c2c, #1b1c1c);
+}
+
+.gro-package-card__image,
+.gro-package-card__image img {
+    width: 100%;
+    height: 155px;
+    margin: 0;
+    object-fit: cover;
+    object-position: right center;
+}
+
+.gro-package-card h3,
+.gro-package-card > p,
+.gro-package-card__list,
+.gro-package-card__actions {
+    width: auto;
+    margin-right: 20px;
+    margin-left: 20px;
+}
+
+.gro-package-card h3 {
+    margin-top: 19px;
+    margin-bottom: 7px;
+    font-size: 1.35rem;
+}
+
+.gro-package-card > p,
+.gro-package-card__list {
+    color: var(--gro-muted);
+    font-size: 0.82rem;
+}
+
+.gro-package-card__audience {
+    margin-top: 0;
+    margin-bottom: 8px;
+    color: #e0ddd8 !important;
+    font-weight: 700;
+}
+
+.gro-package-card__list {
+    padding-left: 18px;
+    margin-top: 8px;
+    margin-bottom: 12px;
+}
+
+.gro-package-card__price {
+    margin-top: auto !important;
+    margin-bottom: 13px;
+    color: var(--gro-orange) !important;
+    font-size: 1.35rem !important;
+    font-weight: 800;
+}
+
+.gro-package-card__actions {
+    margin-top: 0;
+}
+
+.gro-package-card__actions .wp-block-button,
+.gro-package-card__actions .wp-block-button__link {
+    width: 100%;
+}
+
+.gro-step-grid {
+    gap: clamp(24px, 4vw, 70px);
+}
+
+.gro-step {
+    position: relative;
+    min-height: 118px;
+    padding-left: 82px;
+}
+
+.gro-step__number {
+    position: absolute;
+    top: -10px;
+    left: 0;
+    margin: 0;
+    color: var(--gro-orange);
+    font-size: 4.5rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.gro-step h3 {
+    margin: 0 0 7px;
+    font-size: 1.35rem;
+}
+
+.gro-step p:last-child {
+    margin: 0;
+    color: var(--gro-muted);
+}
+
 .gro-content-panel {
     margin-bottom: 40px;
     padding: clamp(24px, 4vw, 48px);
@@ -331,16 +482,16 @@ button:focus-visible {
 }
 
 .gro-site-footer {
-    margin-top: 40px;
-    padding: 24px 30px;
-    border-radius: 13px;
+    margin-top: 0;
+    padding: clamp(42px, 5vw, 68px) clamp(20px, 4vw, 58px);
+    border-radius: 0;
     color: var(--gro-muted);
     background: linear-gradient(145deg, #323333, var(--gro-panel));
 }
 
 .gro-footer-grid {
     margin: 0;
-    gap: clamp(24px, 5vw, 70px);
+    gap: clamp(24px, 4vw, 58px);
 }
 
 .gro-site-footer h3 {
@@ -382,12 +533,12 @@ button:focus-visible {
     }
 
     .wp-site-blocks {
-        width: min(calc(100% - 20px), var(--gro-wide));
-        margin-top: 10px;
+        width: 100%;
+        margin-top: 0;
     }
 
     .gro-site-header {
-        margin-bottom: 20px;
+        margin-bottom: 0;
     }
 
     .gro-utility {
@@ -432,27 +583,43 @@ button:focus-visible {
 
     .gro-hero__copy,
     .gro-hero__visual {
+        width: 100%;
         flex-basis: 100% !important;
     }
 
     .gro-hero__copy {
-        min-height: 390px;
-        padding: 38px 25px;
+        min-height: 480px;
+        padding: 48px 30px;
+    }
+
+    .gro-hero .wp-block-cover__background {
+        background: linear-gradient(90deg, rgba(3, 4, 4, 0.95), rgba(3, 4, 4, 0.68) 68%, rgba(3, 4, 4, 0.35)) !important;
+    }
+
+    .gro-hero .wp-block-cover__image-background,
+    .gro-hero__image img {
+        object-position: right center !important;
     }
 
     .gro-hero__visual,
     .gro-hero__image,
     .gro-hero__image img {
-        min-height: 280px;
-        max-height: 360px;
+        height: 100%;
+        min-height: 100%;
+        max-height: none;
     }
 
     .gro-hero__visual::after {
         background: linear-gradient(180deg, rgba(5, 7, 8, 0.65), transparent 30%);
     }
 
-    .gro-feature-grid > .wp-block-column {
+    .gro-feature-grid > .wp-block-column,
+    .gro-package-grid > .wp-block-column {
         flex: 0 0 calc(50% - 11px) !important;
+    }
+
+    .gro-step-grid > .wp-block-column {
+        flex-basis: 100% !important;
     }
 
 }
@@ -475,10 +642,11 @@ button:focus-visible {
     }
 
     .gro-features {
-        margin-inline: 8px;
+        padding-inline: 20px;
     }
 
-    .gro-feature-grid > .wp-block-column {
+    .gro-feature-grid > .wp-block-column,
+    .gro-package-grid > .wp-block-column {
         flex: 0 0 100% !important;
     }
 
