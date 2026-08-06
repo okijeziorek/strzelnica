@@ -2,13 +2,13 @@
 
 [Uruchom stronę w WordPress Playground](https://playground.wordpress.net/?blueprint-url=https%3A%2F%2Fraw.githubusercontent.com%2Fokijeziorek%2Fstrzelnica%2Fmain%2Fblueprint.json)
 
-Gun Resort One 2.0 to motyw blokowy WordPressa. Stronę można układać bez kodowania w `Wygląd → Edytor`, a treść strony głównej także przez `Strony → Strona główna`.
+Gun Resort One 2.2 to motyw blokowy WordPressa. Stronę można układać bez kodowania w `Wygląd → Edytor`, a treść strony głównej także przez `Strony → Strona główna`.
 
 ## Najważniejsze cechy
 
-- edytowalny nagłówek, menu, hero i cztery kafelki;
+- edytowalny nagłówek, menu, hero, zalety, pakiety, kroki pierwszej wizyty i stopka;
 - pełna swoboda przesuwania, usuwania, duplikowania i zmiany kolumn;
-- wzorce `Hero Gun Resort` oraz `Cztery kafelki Gun Resort`;
+- wzorce hero, czterech zalet, pakietów i kroków pierwszej wizyty;
 - automatyczna, jednorazowa migracja danych z wersji 1.x;
 - opcjonalny przycisk prowadzący do zewnętrznego operatora rezerwacji;
 - brak lokalnego formularza i przechowywania danych rezerwacji;
@@ -27,7 +27,7 @@ Gun Resort One 2.0 to motyw blokowy WordPressa. Stronę można układać bez kod
 2. Aktywuj motyw **Gun Resort One**.
 3. Po pierwszym zalogowanym uruchomieniu motyw utworzy blokową stronę główną i pokaże link do jej edycji.
 4. Wejdź w `Wygląd → Edytor`, aby edytować nagłówek, menu, style i szablony.
-5. Wejdź w `Strony → Strona główna`, aby przesuwać hero, kafelki i przyciski.
+5. Wejdź w `Strony → Strona główna`, aby przesuwać hero, zalety, pakiety, kroki i przyciski.
 
 Pełna instrukcja: [docs/INSTALLATION.md](docs/INSTALLATION.md).
 
@@ -39,7 +39,7 @@ Migracja jest oznaczana opcją `gro_block_migration_version` i nie uruchamia si�
 
 ## Rezerwacje
 
-Motyw nie wysyła i nie przechowuje rezerwacji. Link do zewnętrznego operatora jest zwykłym blokiem Button: można go edytować, przesunąć albo usunąć razem z pozostałą treścią.
+Motyw nie wysyła i nie przechowuje rezerwacji. Do czasu podania operatora przyciski prowadzą do sekcji `#kontakt`; później ich adres można podmienić na zewnętrzny HTTPS w zwykłym bloku Button.
 
 ## Rozwój
 

@@ -38,6 +38,9 @@ jobs:
       - name: Run WordPress Coding Standards
         run: composer lint
 
+      - name: Test block builders and migration
+        run: php tests/smoke-block-builders.php
+
       - name: Validate JSON files
         run: |
           python -m json.tool theme.json >/dev/null

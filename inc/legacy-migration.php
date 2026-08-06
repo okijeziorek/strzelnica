@@ -40,16 +40,16 @@ function gro_legacy_defaults() {
 	return array(
 		'gro_hero_title'       => "Poczuj emocje.\nOpanuj celność.\nGun Resort.",
 		'gro_hero_text'        => 'Opanuj emocje i celność w bezpiecznych warunkach pod okiem doświadczonych instruktorów.',
-		'gro_offer_label'      => 'Zobacz ofertę',
+		'gro_offer_label'      => 'Zobacz pakiety',
 		'gro_offer_url'        => '#pakiety',
-		'gro_booking_label'    => 'Rezerwuj online',
-		'gro_booking_url'      => '',
-		'gro_features_label'   => 'Dlaczego Gun Resort',
-		'gro_phone'            => '690 629 112',
-		'gro_hours'            => 'Pn–Pt 10:00–22:00',
-		'gro_top_note'         => 'Najlepsi instruktorzy i bezpieczne tory',
+		'gro_booking_label'    => 'Rezerwuj',
+		'gro_booking_url'      => '#kontakt',
+		'gro_features_label'   => 'Dlaczego Gun Resort?',
+		'gro_phone'            => 'Telefon do uzupełnienia',
+		'gro_hours'            => 'Godziny do uzupełnienia',
+		'gro_top_note'         => 'Dane robocze — do uzupełnienia',
 		'gro_hero_image'       => 0,
-		'gro_show_booking_cta' => false,
+		'gro_show_booking_cta' => true,
 	);
 }
 
@@ -263,44 +263,51 @@ function gro_feature_icon_url( $index ) {
  * @return string
  */
 function gro_build_hero_blocks( $data ) {
+
 	$title = nl2br( esc_html( (string) $data['title'] ) );
-	$left  = gro_heading_block( $title, 1, array( 'className' => 'gro-hero__title' ) );
-	$left .= gro_paragraph_block( esc_html( (string) $data['text'] ), array( 'className' => 'gro-hero__lead' ) );
+	$copy  = gro_heading_block( $title, 1, array( 'className' => 'gro-hero__title' ) );
+	$copy .= gro_paragraph_block( esc_html( (string) $data['text'] ), array( 'className' => 'gro-hero__lead' ) );
 
 	$buttons  = gro_button_block( (string) $data['offer_label'], (string) $data['offer_url'] );
 	$buttons .= gro_button_block( (string) $data['booking_label'], (string) $data['booking_url'], 'is-style-outline' );
 	if ( '' !== $buttons ) {
-		$left .= gro_block( 'buttons', array( 'className' => 'gro-hero__actions' ), '<div class="wp-block-buttons gro-hero__actions">' . $buttons . '</div>' );
+		$copy .= gro_block( 'buttons', array( 'className' => 'gro-hero__actions' ), '<div class="wp-block-buttons gro-hero__actions">' . $buttons . '</div>' );
 	}
 
-	$left = gro_block( 'column', array( 'className' => 'gro-hero__copy' ), '<div class="wp-block-column gro-hero__copy">' . $left . '</div>' );
-
-	$image = gro_image_block(
-		(string) $data['image_url'],
-		absint( $data['image_id'] ),
-		(string) $data['image_alt'],
-		'gro-hero__image'
-	);
-	$right = gro_block( 'column', array( 'className' => 'gro-hero__visual' ), '<div class="wp-block-column gro-hero__visual">' . $image . '</div>' );
-
-	$columns = gro_block(
-		'columns',
-		array( 'className' => 'gro-hero__columns' ),
-		'<div class="wp-block-columns gro-hero__columns">' . $left . $right . '</div>'
-	);
-
-	return gro_block(
+	$copy = gro_block(
 		'group',
 		array(
-			'tagName'   => 'section',
-			'anchor'    => 'oferta',
-			'className' => 'gro-hero',
-			'align'     => 'wide',
+			'className' => 'gro-hero__copy',
+			'layout'    => array( 'type' => 'constrained' ),
 		),
-		'<section id="oferta" class="wp-block-group alignwide gro-hero">' . $columns . '</section>'
+		'<div class="wp-block-group gro-hero__copy">' . $copy . '</div>'
 	);
-}
 
+	$cover_attrs = array(
+		'url'                => (string) $data['image_url'],
+		'dimRatio'           => 20,
+		'overlayColor'       => 'black',
+		'isUserOverlayColor' => true,
+		'focalPoint'         => array(
+			'x' => 0.5,
+			'y' => 0.5,
+		),
+		'minHeight'          => 540,
+		'minHeightUnit'      => 'px',
+		'contentPosition'    => 'center left',
+		'anchor'             => 'oferta',
+		'className'          => 'gro-hero',
+		'align'              => 'wide',
+	);
+	if ( ! empty( $data['image_id'] ) ) {
+		$cover_attrs['id'] = absint( $data['image_id'] );
+	}
+
+	$image = '<img class="wp-block-cover__image-background" alt="' . esc_attr( (string) $data['image_alt'] ) . '" src="' . esc_url( (string) $data['image_url'] ) . '" style="object-position:50% 50%" data-object-fit="cover" data-object-position="50% 50%"/>';
+	$html  = '<div id="oferta" class="wp-block-cover alignwide has-custom-content-position is-position-center-left gro-hero" style="min-height:540px"><span aria-hidden="true" class="wp-block-cover__background has-black-background-color has-background-dim-20 has-background-dim"></span>' . $image . '<div class="wp-block-cover__inner-container">' . $copy . '</div></div>';
+
+	return gro_block( 'cover', $cover_attrs, $html );
+}
 /**
  * Builds the editable feature-card pattern.
  *
@@ -309,6 +316,7 @@ function gro_build_hero_blocks( $data ) {
  * @return string
  */
 function gro_build_features_blocks( $features, $label ) {
+
 	$columns = '';
 	foreach ( $features as $index => $feature ) {
 		$image_url = empty( $feature['image_url'] ) ? gro_feature_icon_url( $index ) : (string) $feature['image_url'];
@@ -329,21 +337,113 @@ function gro_build_features_blocks( $features, $label ) {
 		$columns .= gro_block( 'column', array(), '<div class="wp-block-column">' . $card . '</div>' );
 	}
 
-	$heading = gro_heading_block( esc_html( $label ), 2, array( 'className' => 'screen-reader-text' ) );
+	$heading = gro_heading_block( esc_html( $label ), 2, array( 'className' => 'gro-section-title' ) );
 	$grid    = gro_block( 'columns', array( 'className' => 'gro-feature-grid' ), '<div class="wp-block-columns gro-feature-grid">' . $columns . '</div>' );
 
 	return gro_block(
 		'group',
 		array(
 			'tagName'   => 'section',
-			'anchor'    => 'pakiety',
+			'anchor'    => 'dlaczego',
 			'className' => 'gro-features',
 			'align'     => 'wide',
 		),
-		'<section id="pakiety" class="wp-block-group alignwide gro-features">' . $heading . $grid . '</section>'
+		'<section id="dlaczego" class="wp-block-group alignwide gro-features">' . $heading . $grid . '</section>'
 	);
 }
 
+/**
+ * Builds four editable starter package cards.
+ *
+ * @return string
+ */
+function gro_build_packages_blocks() {
+
+	$columns   = '';
+	$image_url = get_theme_file_uri( 'hero.jpg' );
+
+	for ( $index = 1; $index <= 4; $index++ ) {
+		$card = gro_image_block( $image_url, 0, '', 'gro-package-card__image' );
+		/* translators: %d: starter package number. */
+		$card    .= gro_heading_block( sprintf( __( 'Pakiet %d', 'gun-resort-one' ), $index ), 3 );
+		$card    .= gro_paragraph_block( __( 'Dla kogo: do uzupełnienia', 'gun-resort-one' ), array( 'className' => 'gro-package-card__audience' ) );
+		$card    .= gro_paragraph_block( __( 'Opis pakietu i jego zawartość do uzupełnienia.', 'gun-resort-one' ) );
+		$card    .= gro_block(
+			'list',
+			array( 'className' => 'gro-package-card__list' ),
+			'<ul class="wp-block-list gro-package-card__list"><li>' . esc_html__( 'Element pakietu', 'gun-resort-one' ) . '</li><li>' . esc_html__( 'Liczba strzałów', 'gun-resort-one' ) . '</li></ul>'
+		);
+		$card    .= gro_paragraph_block( __( 'Cena do ustalenia', 'gun-resort-one' ), array( 'className' => 'gro-package-card__price' ) );
+		$card    .= gro_block( 'buttons', array( 'className' => 'gro-package-card__actions' ), '<div class="wp-block-buttons gro-package-card__actions">' . gro_button_block( __( 'Rezerwuj', 'gun-resort-one' ), '#kontakt' ) . '</div>' );
+		$card     = gro_block(
+			'group',
+			array(
+				'className' => 'gro-package-card',
+				'layout'    => array( 'type' => 'constrained' ),
+			),
+			'<div class="wp-block-group gro-package-card">' . $card . '</div>'
+		);
+		$columns .= gro_block( 'column', array(), '<div class="wp-block-column">' . $card . '</div>' );
+	}
+
+	$heading = gro_heading_block( __( 'Pakiety strzeleckie', 'gun-resort-one' ), 2, array( 'className' => 'gro-section-title' ) );
+	$grid    = gro_block( 'columns', array( 'className' => 'gro-package-grid' ), '<div class="wp-block-columns gro-package-grid">' . $columns . '</div>' );
+
+	return gro_block(
+		'group',
+		array(
+			'tagName'   => 'section',
+			'anchor'    => 'pakiety',
+			'className' => 'gro-packages',
+			'align'     => 'wide',
+		),
+		'<section id="pakiety" class="wp-block-group alignwide gro-packages">' . $heading . $grid . '</section>'
+	);
+}
+
+/**
+ * Builds the editable first-visit steps.
+ *
+ * @return string
+ */
+function gro_build_first_time_blocks() {
+
+	$steps   = array(
+		array( __( 'Wybierz pakiet', 'gun-resort-one' ), __( 'Wybierz pakiet dopasowany do swoich potrzeb.', 'gun-resort-one' ) ),
+		array( __( 'Przyjdź z dokumentem', 'gun-resort-one' ), __( 'Przygotuj ważny dokument tożsamości.', 'gun-resort-one' ) ),
+		array( __( 'Przejdź szkolenie', 'gun-resort-one' ), __( 'Instruktor omówi zasady bezpieczeństwa.', 'gun-resort-one' ) ),
+	);
+	$columns = '';
+
+	foreach ( $steps as $index => $step ) {
+		$content  = gro_paragraph_block( (string) ( $index + 1 ) . '.', array( 'className' => 'gro-step__number' ) );
+		$content .= gro_heading_block( $step[0], 3 );
+		$content .= gro_paragraph_block( $step[1] );
+		$content  = gro_block(
+			'group',
+			array(
+				'className' => 'gro-step',
+				'layout'    => array( 'type' => 'constrained' ),
+			),
+			'<div class="wp-block-group gro-step">' . $content . '</div>'
+		);
+		$columns .= gro_block( 'column', array(), '<div class="wp-block-column">' . $content . '</div>' );
+	}
+
+	$heading = gro_heading_block( __( 'Pierwszy raz na strzelnicy?', 'gun-resort-one' ), 2, array( 'className' => 'gro-section-title' ) );
+	$grid    = gro_block( 'columns', array( 'className' => 'gro-step-grid' ), '<div class="wp-block-columns gro-step-grid">' . $columns . '</div>' );
+
+	return gro_block(
+		'group',
+		array(
+			'tagName'   => 'section',
+			'anchor'    => 'pierwszy-raz',
+			'className' => 'gro-first-time',
+			'align'     => 'wide',
+		),
+		'<section id="pierwszy-raz" class="wp-block-group alignwide gro-first-time">' . $heading . $grid . '</section>'
+	);
+}
 /**
  * Collects the old home-page data and returns serialized block content.
  *
@@ -371,9 +471,53 @@ function gro_build_migrated_front_page() {
 		$hero['booking_url']   = (string) gro_legacy_mod( 'gro_booking_url' );
 	}
 
-	return gro_build_hero_blocks( $hero ) . gro_build_features_blocks( gro_collect_legacy_features(), (string) gro_legacy_mod( 'gro_features_label' ) );
+	return gro_build_hero_blocks( $hero )
+		. gro_build_features_blocks( gro_collect_legacy_features(), (string) gro_legacy_mod( 'gro_features_label' ) )
+		. gro_build_packages_blocks()
+		. gro_build_first_time_blocks();
 }
 
+/**
+ * Adds the 2.2 sections to a previously generated page without replacing edits.
+ *
+ * @param string $content Existing block content.
+ * @return string
+ */
+function gro_upgrade_front_page_content( $content ) {
+
+	$content = str_replace(
+		array(
+			'"className":"gro-hero","align":"wide","layout":{"type":"constrained"}',
+			'"className":"gro-features","align":"wide","layout":{"type":"constrained"}',
+			'"className":"gro-hero","layout":{"type":"constrained"}',
+			'"className":"gro-features","layout":{"type":"constrained"}',
+			'"anchor":"pakiety","className":"gro-features"',
+			'<section id="pakiety" class="wp-block-group alignwide gro-features">',
+			'"className":"screen-reader-text"',
+			'class="wp-block-heading screen-reader-text"',
+		),
+		array(
+			'"className":"gro-hero","align":"wide"',
+			'"className":"gro-features","align":"wide"',
+			'"className":"gro-hero","align":"wide"',
+			'"className":"gro-features","align":"wide"',
+			'"anchor":"dlaczego","className":"gro-features"',
+			'<section id="dlaczego" class="wp-block-group alignwide gro-features">',
+			'"className":"gro-section-title"',
+			'class="wp-block-heading gro-section-title"',
+		),
+		$content
+	);
+
+	if ( false === strpos( $content, 'gro-packages' ) ) {
+		$content .= gro_build_packages_blocks();
+	}
+	if ( false === strpos( $content, 'gro-first-time' ) ) {
+		$content .= gro_build_first_time_blocks();
+	}
+
+	return $content;
+}
 /**
  * Finds an object created by a previous, interrupted migration attempt.
  *
@@ -406,23 +550,8 @@ function gro_create_migrated_front_page() {
 	if ( $page_id ) {
 		$page    = get_post( $page_id );
 		$content = $page instanceof WP_Post ? (string) $page->post_content : '';
-		$content = str_replace(
-			array(
-				'"className":"gro-hero","align":"wide","layout":{"type":"constrained"}',
-				'"className":"gro-features","align":"wide","layout":{"type":"constrained"}',
-				'"className":"gro-hero","layout":{"type":"constrained"}',
-				'"className":"gro-features","layout":{"type":"constrained"}',
-			),
-			array(
-				'"className":"gro-hero","align":"wide"',
-				'"className":"gro-features","align":"wide"',
-				'"className":"gro-hero","align":"wide"',
-				'"className":"gro-features","align":"wide"',
-			),
-			$content
-		);
-
-		$result = wp_update_post(
+		$content = gro_upgrade_front_page_content( $content );
+		$result  = wp_update_post(
 			wp_slash(
 				array(
 					'ID'           => $page_id,
@@ -516,12 +645,16 @@ function gro_build_navigation_links() {
 				'url'   => home_url( '/' ),
 			),
 			array(
-				'label' => __( 'Oferta', 'gun-resort-one' ),
-				'url'   => home_url( '/#oferta' ),
+				'label' => __( 'Dlaczego my', 'gun-resort-one' ),
+				'url'   => home_url( '/#dlaczego' ),
 			),
 			array(
 				'label' => __( 'Pakiety', 'gun-resort-one' ),
 				'url'   => home_url( '/#pakiety' ),
+			),
+			array(
+				'label' => __( 'Pierwszy raz', 'gun-resort-one' ),
+				'url'   => home_url( '/#pierwszy-raz' ),
 			),
 			array(
 				'label' => __( 'Kontakt', 'gun-resort-one' ),
@@ -589,8 +722,10 @@ function gro_build_header_content( $navigation_id ) {
 	$left      = '';
 	$telephone = preg_replace( '/[^0-9+]/', '', $phone );
 
-	if ( $phone ) {
+	if ( $phone && $telephone ) {
 		$left .= gro_paragraph_block( '<a href="tel:' . esc_attr( $telephone ) . '">' . esc_html( $phone ) . '</a>' );
+	} elseif ( $phone ) {
+		$left .= gro_paragraph_block( esc_html( $phone ) );
 	}
 	if ( $note ) {
 		$left .= gro_paragraph_block( esc_html( $note ) );
@@ -609,8 +744,9 @@ function gro_build_header_content( $navigation_id ) {
 		);
 	}
 	if ( $hours ) {
-		$right = gro_paragraph_block( esc_html( $hours ) );
-		$right = gro_block(
+		$right  = gro_paragraph_block( esc_html( $hours ) );
+		$right .= gro_paragraph_block( __( 'Adres do uzupełnienia', 'gun-resort-one' ) );
+		$right  = gro_block(
 			'group',
 			array(
 				'className' => 'gro-utility__right',
@@ -671,12 +807,8 @@ function gro_build_header_content( $navigation_id ) {
 			'className'   => 'gro-primary-navigation',
 		)
 	);
-	$cta        = '';
-	if ( gro_legacy_mod( 'gro_show_booking_cta' ) && gro_legacy_mod( 'gro_booking_url' ) ) {
-		$cta = gro_block( 'buttons', array( 'className' => 'gro-header-cta' ), '<div class="wp-block-buttons gro-header-cta">' . gro_button_block( (string) gro_legacy_mod( 'gro_booking_label' ), (string) gro_legacy_mod( 'gro_booking_url' ) ) . '</div>' );
-	}
-
-	$main = gro_block(
+	$cta        = gro_block( 'buttons', array( 'className' => 'gro-header-cta' ), '<div class="wp-block-buttons gro-header-cta">' . gro_button_block( __( 'Rezerwuj', 'gun-resort-one' ), '#kontakt' ) . '</div>' );
+	$main       = gro_block(
 		'group',
 		array(
 			'className' => 'gro-main-nav',
@@ -738,32 +870,21 @@ function gro_create_header_template_part( $navigation_id ) {
  * @return int|WP_Error New front-page ID or an error.
  */
 function gro_run_block_migration() {
+
 	$page_id = gro_create_migrated_front_page();
 	if ( is_wp_error( $page_id ) ) {
 		return $page_id;
 	}
 
-	$navigation_id = gro_find_migration_post( 'wp_navigation' );
-	if ( ! $navigation_id ) {
-		$navigation_id = gro_create_navigation();
-		if ( is_wp_error( $navigation_id ) ) {
-			return $navigation_id;
-		}
+	$navigation_id = gro_create_navigation();
+	if ( is_wp_error( $navigation_id ) ) {
+		return $navigation_id;
 	}
 
-	$template_part_id = gro_find_migration_post( 'wp_template_part' );
-	if ( ! $template_part_id ) {
-		$template_part_id = gro_create_header_template_part( $navigation_id );
-		if ( is_wp_error( $template_part_id ) ) {
-			return $template_part_id;
-		}
-	} else {
-		$template_part_id = gro_normalize_header_template_part( $template_part_id );
-		if ( is_wp_error( $template_part_id ) ) {
-			return $template_part_id;
-		}
+	$template_part_id = gro_create_header_template_part( $navigation_id );
+	if ( is_wp_error( $template_part_id ) ) {
+		return $template_part_id;
 	}
-
 	$published = wp_update_post(
 		array(
 			'ID'          => $page_id,

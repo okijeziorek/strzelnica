@@ -4,7 +4,7 @@
 
 | Treść | Miejsce edycji | Reprezentacja |
 |---|---|---|
-| Hero i kafelki | `Strony → Strona główna` | bloki w `post_content` |
+| Hero, zalety, pakiety i kroki | `Strony → Strona główna` | bloki w `post_content` |
 | Logo i nazwa | `Wygląd → Edytor` | Site Logo i Site Title |
 | Menu | `Wygląd → Edytor → Nawigacja` | `wp_navigation` |
 | Górny pasek | edycja części nagłówka | bloki Paragraph i Group |
@@ -21,7 +21,7 @@ Wzorce motywu są niesynchronizowane. Po wstawieniu ich elementy należą do str
 - menu przypisane do historycznej lokalizacji `primary`;
 - telefon, komunikat i godziny z górnego paska.
 
-Jeśli brakuje starego menu, powstają odnośniki Start, Oferta i Pakiety. Jeśli brakuje zalet, motyw tworzy cztery domyślne kafelki bez tworzenia nowych wpisów CPT.
+Jeśli brakuje starego menu, powstają odnośniki Start, Dlaczego my, Pakiety, Pierwszy raz i Kontakt. Jeśli brakuje zalet, motyw tworzy cztery domyślne kafelki bez tworzenia nowych wpisów CPT. Migracja 6 zachowuje treść istniejącego hero i zalet oraz dopisuje pakiety i kroki tylko wtedy, gdy ich jeszcze nie ma.
 
 ## Bezpieczeństwo migracji
 

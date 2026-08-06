@@ -1,4 +1,4 @@
-GUN RESORT ONE — wersja 2.0.0
+GUN RESORT ONE — wersja 2.2.0
 
 WYMAGANIA
 - najnowszy stabilny WordPress (bazowo 7.0),
@@ -12,9 +12,10 @@ INSTALACJA
 5. Nagłówek, menu, stopkę i style edytuj w: Wygląd → Edytor.
 
 REZERWACJE
-Motyw nie posiada formularza rezerwacji. Zewnętrzną rezerwację dodaj jako zwykły blok Button z pełnym adresem HTTPS operatora.
+Motyw nie posiada formularza rezerwacji. Robocze przyciski prowadzą do sekcji kontaktowej; później wpisz w blokach Button pełny adres HTTPS operatora.
 
-MIGRACJA 1.x → 2.0
+MIGRACJA 1.x/2.x → 2.2
 - treść hero, kafelki, obrazy, menu i górny pasek są przenoszone automatycznie;
 - stara strona i stare dane pozostają w bazie na potrzeby rollbacku;
 - migracja jest wykonywana tylko raz.
+- migracja zachowuje edytowane hero i zalety oraz dodaje brakujące pakiety i kroki bez duplikatów.

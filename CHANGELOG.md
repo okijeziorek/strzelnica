@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.2.0
+
+- Przebudowano stronę główną według zaakceptowanej kompozycji: szerokie hero, zalety, pakiety, trzy kroki i czterokolumnowa stopka.
+- Hero korzysta z edytowalnego bloku Cover z wymianą obrazu i punktem kadrowania.
+- Dodano wzorce pakietów oraz sekcji „Pierwszy raz na strzelnicy?”.
+- Dodano robocze pola treści, cen i kontaktu oraz tymczasowe przejścia rezerwacji do sekcji kontaktowej.
+- Migracja 6 zachowuje edytowane hero i zalety, zmienia kotwicę sekcji zalet oraz dopisuje brakujące sekcje bez duplikatów.
+- Poszerzono układ do 1320 px i utrzymano cztery karty w rzędzie przy szerokości 901 px.
+
 ## 2.1.0
 
 - Dodano rozbudowaną stopkę z potwierdzonym telefonem i lokalizacją Toruń.

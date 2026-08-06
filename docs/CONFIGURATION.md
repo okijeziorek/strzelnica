@@ -2,13 +2,14 @@
 
 ## Strona główna
 
-Otwórz `Strony → Strona główna → Edytuj`. Hero, przyciski i kafelki są zwykłymi blokami. Możesz:
+Otwórz `Strony → Strona główna → Edytuj`. Hero, przyciski, zalety, pakiety i kroki są zwykłymi blokami. Możesz:
 
 - przeciągać całe sekcje i pojedyncze bloki;
 - zmieniać liczbę oraz szerokość kolumn;
 - podmieniać obrazy i teksty alternatywne;
 - dodawać, duplikować i usuwać kafelki;
 - zmieniać treść i adresy przycisków;
+- edytować nazwy pakietów, listy, ceny i kolejność kroków;
 - wstawiać ponownie wzorce z kategorii `Gun Resort`.
 
 Motyw nie stosuje blokad edytora.
@@ -30,8 +31,8 @@ Globalne kolory, typografię i odstępy zmienisz w `Wygląd → Edytor → Style
 
 ## Rezerwacje zewnętrzne
 
-Dodaj lub edytuj blok Button i wpisz pełny adres HTTPS przekazany przez operatora. Motyw nie posiada formularza, kalendarza, płatności ani lokalnego zapisu rezerwacji.
+W wersji roboczej przyciski prowadzą do `#kontakt`. Po otrzymaniu adresu operatora edytuj każdy blok Button i wpisz pełny HTTPS. Motyw nie posiada formularza, kalendarza, płatności ani lokalnego zapisu rezerwacji.
 
 ## Stopka
 
-Strona główna celowo nie zawiera stopki. Prosta część stopki jest używana w szablonach podstron i wpisów; można ją rozbudować w Edytorze witryny.
+Strona główna używa czterokolumnowej części stopki. Pola O nas, Informacje prawne, Szybkie linki i Kontakt można zmienić w `Wygląd → Edytor → Projekt → Wzorce → Stopka`.
