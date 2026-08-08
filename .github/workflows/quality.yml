@@ -38,8 +38,10 @@ jobs:
       - name: Run WordPress Coding Standards
         run: composer lint
 
-      - name: Test block builders and migration
-        run: php tests/smoke-block-builders.php
+      - name: Test block builders, migration and editability
+        run: |
+          php tests/smoke-block-builders.php
+          php tests/editability-contract.php
 
       - name: Validate JSON files
         run: |

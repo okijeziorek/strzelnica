@@ -548,18 +548,24 @@ function gro_create_migrated_front_page() {
 	$page_id = gro_find_migration_post( 'page' );
 
 	if ( $page_id ) {
-		$page    = get_post( $page_id );
-		$content = $page instanceof WP_Post ? (string) $page->post_content : '';
-		$content = gro_upgrade_front_page_content( $content );
-		$result  = wp_update_post(
-			wp_slash(
-				array(
-					'ID'           => $page_id,
-					'post_content' => $content,
-				)
-			),
-			true
-		);
+		$stored_version = absint( get_post_meta( $page_id, '_gro_block_migration_version', true ) );
+
+		if ( $stored_version < 6 ) {
+			$page    = get_post( $page_id );
+			$content = $page instanceof WP_Post ? (string) $page->post_content : '';
+			$content = gro_upgrade_front_page_content( $content );
+			$result  = wp_update_post(
+				wp_slash(
+					array(
+						'ID'           => $page_id,
+						'post_content' => $content,
+					)
+				),
+				true
+			);
+		} else {
+			$result = $page_id;
+		}
 	} else {
 		$result = wp_insert_post(
 			wp_slash(
@@ -580,39 +586,6 @@ function gro_create_migrated_front_page() {
 	}
 
 	return $result;
-}
-
-/**
- * Removes the obsolete constrained layout from a generated header part.
- *
- * @param int $template_part_id Template part post ID.
- * @return int|WP_Error
- */
-function gro_normalize_header_template_part( $template_part_id ) {
-	$template_part = get_post( $template_part_id );
-	if ( ! $template_part instanceof WP_Post ) {
-		return new WP_Error( 'gro_missing_header', __( 'Nie znaleziono nagłówka Gun Resort.', 'gun-resort-one' ) );
-	}
-
-	$content = str_replace(
-		'"className":"gro-site-header","layout":{"type":"constrained"}',
-		'"className":"gro-site-header"',
-		(string) $template_part->post_content
-	);
-
-	if ( $content === $template_part->post_content ) {
-		return absint( $template_part_id );
-	}
-
-	return wp_update_post(
-		wp_slash(
-			array(
-				'ID'           => $template_part_id,
-				'post_content' => $content,
-			)
-		),
-		true
-	);
 }
 
 /**
@@ -687,19 +660,20 @@ function gro_build_navigation_links() {
  */
 function gro_create_navigation() {
 	$navigation_id = gro_find_migration_post( 'wp_navigation' );
-	$data          = array(
+
+	if ( $navigation_id ) {
+		update_post_meta( $navigation_id, '_gro_block_migration_version', GRO_BLOCK_MIGRATION_VERSION );
+		return $navigation_id;
+	}
+
+	$data = array(
 		'post_type'    => 'wp_navigation',
 		'post_status'  => 'publish',
 		'post_title'   => __( 'Menu główne', 'gun-resort-one' ),
 		'post_content' => gro_build_navigation_links(),
 	);
 
-	if ( $navigation_id ) {
-		$data['ID'] = $navigation_id;
-		$result     = wp_update_post( wp_slash( $data ), true );
-	} else {
-		$result = wp_insert_post( wp_slash( $data ), true );
-	}
+	$result = wp_insert_post( wp_slash( $data ), true );
 
 	if ( ! is_wp_error( $result ) ) {
 		update_post_meta( $result, '_gro_block_migration_version', GRO_BLOCK_MIGRATION_VERSION );
@@ -816,7 +790,13 @@ function gro_build_header_content( $navigation_id ) {
  */
 function gro_create_header_template_part( $navigation_id ) {
 	$template_id = gro_find_migration_post( 'wp_template_part' );
-	$data        = array(
+
+	if ( $template_id ) {
+		update_post_meta( $template_id, '_gro_block_migration_version', GRO_BLOCK_MIGRATION_VERSION );
+		return $template_id;
+	}
+
+	$data = array(
 		'post_type'    => 'wp_template_part',
 		'post_status'  => 'publish',
 		'post_title'   => __( 'Nagłówek', 'gun-resort-one' ),
@@ -824,12 +804,7 @@ function gro_create_header_template_part( $navigation_id ) {
 		'post_content' => gro_build_header_content( $navigation_id ),
 	);
 
-	if ( $template_id ) {
-		$data['ID'] = $template_id;
-		$result     = wp_update_post( wp_slash( $data ), true );
-	} else {
-		$result = wp_insert_post( wp_slash( $data ), true );
-	}
+	$result = wp_insert_post( wp_slash( $data ), true );
 
 	if ( is_wp_error( $result ) ) {
 		return $result;
