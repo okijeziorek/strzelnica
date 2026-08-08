@@ -715,65 +715,47 @@ function gro_create_navigation() {
  * @return string
  */
 function gro_build_header_content( $navigation_id ) {
-	$phone     = (string) gro_legacy_mod( 'gro_phone' );
-	$note      = (string) gro_legacy_mod( 'gro_top_note' );
-	$hours     = (string) gro_legacy_mod( 'gro_hours' );
-	$utility   = '';
-	$left      = '';
-	$telephone = preg_replace( '/[^0-9+]/', '', $phone );
+	$left  = gro_paragraph_block( '<a href="mailto:kontakt@gunresort.pl">kontakt@gunresort.pl</a>' );
+	$left .= gro_paragraph_block( '<a href="mailto:praca@gunresort.pl">praca@gunresort.pl</a>' );
+	$left  = gro_block(
+		'group',
+		array(
+			'className' => 'gro-utility__left',
+			'layout'    => array(
+				'type'     => 'flex',
+				'flexWrap' => 'wrap',
+			),
+		),
+		'<div class="wp-block-group gro-utility__left">' . $left . '</div>'
+	);
 
-	if ( $phone && $telephone ) {
-		$left .= gro_paragraph_block( '<a href="tel:' . esc_attr( $telephone ) . '">' . esc_html( $phone ) . '</a>' );
-	} elseif ( $phone ) {
-		$left .= gro_paragraph_block( esc_html( $phone ) );
-	}
-	if ( $note ) {
-		$left .= gro_paragraph_block( esc_html( $note ) );
-	}
-	if ( $left ) {
-		$left = gro_block(
-			'group',
-			array(
-				'className' => 'gro-utility__left',
-				'layout'    => array(
-					'type'     => 'flex',
-					'flexWrap' => 'wrap',
-				),
+	$right  = gro_paragraph_block( '<a href="https://www.facebook.com/profile.php?id=61584019233226">Facebook</a>' );
+	$right .= gro_paragraph_block( '<a href="https://www.instagram.com/strzelnicastrefa48/">Instagram</a>' );
+	$right  = gro_block(
+		'group',
+		array(
+			'className' => 'gro-utility__right',
+			'layout'    => array(
+				'type'           => 'flex',
+				'flexWrap'       => 'wrap',
+				'justifyContent' => 'right',
 			),
-			'<div class="wp-block-group gro-utility__left">' . $left . '</div>'
-		);
-	}
-	if ( $hours ) {
-		$right  = gro_paragraph_block( esc_html( $hours ) );
-		$right .= gro_paragraph_block( __( 'Adres do uzupełnienia', 'gun-resort-one' ) );
-		$right  = gro_block(
-			'group',
-			array(
-				'className' => 'gro-utility__right',
-				'layout'    => array(
-					'type'           => 'flex',
-					'justifyContent' => 'right',
-				),
+		),
+		'<div class="wp-block-group gro-utility__right">' . $right . '</div>'
+	);
+
+	$utility = gro_block(
+		'group',
+		array(
+			'className' => 'gro-utility',
+			'layout'    => array(
+				'type'           => 'flex',
+				'flexWrap'       => 'nowrap',
+				'justifyContent' => 'space-between',
 			),
-			'<div class="wp-block-group gro-utility__right">' . $right . '</div>'
-		);
-	} else {
-		$right = '';
-	}
-	if ( $left || $right ) {
-		$utility = gro_block(
-			'group',
-			array(
-				'className' => 'gro-utility',
-				'layout'    => array(
-					'type'           => 'flex',
-					'flexWrap'       => 'nowrap',
-					'justifyContent' => 'space-between',
-				),
-			),
-			'<div class="wp-block-group gro-utility">' . $left . $right . '</div>'
-		);
-	}
+		),
+		'<div class="wp-block-group gro-utility">' . $left . $right . '</div>'
+	);
 
 	if ( has_custom_logo() ) {
 		$brand = gro_void_block(
@@ -784,9 +766,8 @@ function gro_build_header_content( $navigation_id ) {
 			)
 		);
 	} else {
-		$brand = gro_image_block( get_theme_file_uri( 'assets/logo-glock.png' ), 0, '', 'gro-brand__fallback-logo' );
+		$brand = gro_image_block( add_query_arg( 'ver', GRO_THEME_VERSION, get_theme_file_uri( 'assets/logo-glock.png' ) ), 0, '', 'gro-brand__fallback-logo' );
 	}
-	$brand .= gro_void_block( 'site-title', array( 'level' => 0 ) );
 	$brand  = gro_block(
 		'group',
 		array(
