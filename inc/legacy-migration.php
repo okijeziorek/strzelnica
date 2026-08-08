@@ -768,7 +768,7 @@ function gro_build_header_content( $navigation_id ) {
 	} else {
 		$brand = gro_image_block( add_query_arg( 'ver', GRO_THEME_VERSION, get_theme_file_uri( 'assets/logo-glock.png' ) ), 0, '', 'gro-brand__fallback-logo' );
 	}
-	$brand  = gro_block(
+	$brand = gro_block(
 		'group',
 		array(
 			'className' => 'gro-brand',
