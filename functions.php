@@ -9,8 +9,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'GRO_THEME_VERSION', '2.2.0' );
-define( 'GRO_BLOCK_MIGRATION_VERSION', 6 );
+define( 'GRO_THEME_VERSION', '2.4.0' );
+define( 'GRO_BLOCK_MIGRATION_VERSION', 8 );
 /**
  * Registers theme supports used by the block editor and front end.
  */

@@ -1,5 +1,19 @@
 # Changelog
 
+## 2.4.0
+
+- Utrwalono w pełni blokowy model edycji strony głównej, nagłówka, menu i stopki.
+- Migracja tworzy treść startową tylko raz i nie nadpisuje późniejszych zmian zapisanych w Edytorze witryny.
+- Starsza strona z migracji wcześniejszej niż 6 nadal otrzymuje jednorazowe, brakujące sekcje 2.2 bez dalszego automatycznego przepisywania treści.
+- Dodano automatyczny kontrakt testowy wykrywający blokady edytora i treści spoza natywnych bloków.
+
+## 2.3.0
+
+- Zastąpiono roboczą ikonę przekazanym logo Gun Resort.
+- Dodano właściwe adresy `kontakt@gunresort.pl` i `praca@gunresort.pl`.
+- Dodano oficjalne profile Facebook i Instagram do nagłówka oraz stopki.
+- Migracja 8 odświeża zapisany nagłówek istniejącej instalacji i wymusza pobranie aktualnego logo poza pamięcią podręczną CDN.
+
 ## 2.2.0
 
 - Przebudowano stronę główną według zaakceptowanej kompozycji: szerokie hero, zalety, pakiety, trzy kroki i czterokolumnowa stopka.

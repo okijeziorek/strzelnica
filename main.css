@@ -117,8 +117,8 @@ button:focus-visible {
 }
 
 .gro-brand__fallback-logo {
-    width: 70px;
-    height: 62px;
+    width: 210px;
+    height: 68px;
     margin: 0;
 }
 
@@ -561,8 +561,8 @@ button:focus-visible {
     }
 
     .gro-brand__fallback-logo {
-        width: 57px;
-        height: 46px;
+        width: 155px;
+        height: 56px;
     }
 
     .gro-brand .wp-block-site-title {

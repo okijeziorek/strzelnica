@@ -2,7 +2,7 @@
 
 [Uruchom stronę w WordPress Playground](https://playground.wordpress.net/?blueprint-url=https%3A%2F%2Fraw.githubusercontent.com%2Fokijeziorek%2Fstrzelnica%2Fmain%2Fblueprint.json)
 
-Gun Resort One 2.2 to motyw blokowy WordPressa. Stronę można układać bez kodowania w `Wygląd → Edytor`, a treść strony głównej także przez `Strony → Strona główna`.
+Gun Resort One 2.4 to motyw blokowy WordPressa. Stronę można układać bez kodowania w `Wygląd → Edytor`, a treść strony głównej także przez `Strony → Strona główna`.
 
 ## Najważniejsze cechy
 
@@ -10,6 +10,7 @@ Gun Resort One 2.2 to motyw blokowy WordPressa. Stronę można układać bez kod
 - pełna swoboda przesuwania, usuwania, duplikowania i zmiany kolumn;
 - wzorce hero, czterech zalet, pakietów i kroków pierwszej wizyty;
 - automatyczna, jednorazowa migracja danych z wersji 1.x;
+- brak blokad edytora i brak nadpisywania treści po migracji;
 - opcjonalny przycisk prowadzący do zewnętrznego operatora rezerwacji;
 - brak lokalnego formularza i przechowywania danych rezerwacji;
 - responsywny układ i nawigacja mobilna oparta na bloku WordPressa;

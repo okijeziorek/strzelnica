@@ -14,11 +14,13 @@ Otwórz `Strony → Strona główna → Edytuj`. Hero, przyciski, zalety, pakiet
 
 Motyw nie stosuje blokad edytora.
 
+Każdy element widoczny na stronie jest natywnym blokiem. Po zaznaczeniu widoku listy można edytować, przesunąć, zduplikować albo usunąć także całe sekcje i ich kontenery. Aktualizacja motywu nie przywraca treści startowej i nie nadpisuje zapisanych zmian.
+
 ## Nagłówek i menu
 
 1. Przejdź do `Wygląd → Edytor → Projekt → Wzorce`.
 2. Otwórz część szablonu `Nagłówek`.
-3. Edytuj logo, nazwę, telefon, komunikat, godziny i blok Navigation.
+3. Edytuj logo, oba adresy e-mail, linki społecznościowe, przycisk i blok Navigation.
 
 Aby tymczasowo ukryć link nawigacji lub przycisk bez jego usuwania, zaznacz blok i wybierz styl **Ukryj element**. W edytorze element pozostaje półprzezroczysty, a na stronie publicznej jest niewidoczny. Ponowne wybranie stylu domyślnego przywraca element.
 4. Zapisz część szablonu.
